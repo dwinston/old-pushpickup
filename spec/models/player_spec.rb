@@ -78,6 +78,16 @@ describe Player do
       end
     end
   end
+  
+  describe "email address with mixed case" do
+    let(:mixed_case_email) { 'Foo@ExAMPLe.CoM' }
+
+    it "should be saved as all lower-case" do
+      @player.email = mixed_case_email
+      @player.save
+      @player.reload.email.should == mixed_case_email.downcase
+    end
+  end
 
   describe "when email address is already taken" do
     before do
