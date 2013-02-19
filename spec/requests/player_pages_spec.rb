@@ -40,6 +40,7 @@ describe "Player pages" do
         let(:player) { Player.find_by_email('player@example.com') }
         it { should have_selector 'title', text: player.name }
         it { should have_selector 'div.alert.alert-success', text: 'Welcome' }
+        it { should have_link 'Sign out' }
       end
     end
   end
