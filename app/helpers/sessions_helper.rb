@@ -21,4 +21,8 @@ module SessionsHelper
   def current_player
     @current_player ||= Player.find_by_remember_token(cookies[:remember_token])
   end
+
+  def current_player?(player)
+    player == current_player
+  end
 end

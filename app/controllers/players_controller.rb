@@ -1,5 +1,6 @@
 class PlayersController < ApplicationController
-  before_filter :signed_in_user, only: [:edit, :update]
+  before_filter :signed_in_player, only: [:edit, :update]
+  before_filter :correct_player, only: [:edit, :update]
 
   def show
     @player = Player.find(params[:id])
@@ -21,11 +22,9 @@ class PlayersController < ApplicationController
   end
 
   def edit
-    @player = Player.find(params[:id])
   end
 
   def update
-    @player = Player.find(params[:id])
     if @player.update_attributes(params[:player])
       flash[:success] = 'Profile updated'
       sign_in @player
@@ -37,7 +36,12 @@ class PlayersController < ApplicationController
 
   private
     
-    def signed_in_user
+    def signed_in_player
       redirect_to signin_url, notice: 'Please sign in.' unless signed_in?
+    end
+
+    def correct_player
+      @player = Player.find(params[:id])
+      redirect_to(root_path) unless current_player?(@player)
     end
 end

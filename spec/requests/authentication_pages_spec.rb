@@ -56,5 +56,21 @@ describe "Authentication" do
         end
       end
     end
+
+    describe 'as wrong player' do
+      let(:player) { FactoryGirl.create(:player) }
+      let(:wrong_player) { FactoryGirl.create(:player, email: 'wrong@example.com') }
+      before { sign_in player }
+
+      describe 'visiting Players#edit page' do
+        before { visit edit_player_path(wrong_player) }
+        it { should_not have_selector 'title', text: full_title('Edit player') }
+      end
+
+      describe 'submitting a PUT request to the Players#update action' do
+        before { put player_path(wrong_player) }
+        specify { response.should redirect_to(root_path) }
+      end
+    end
   end
 end
