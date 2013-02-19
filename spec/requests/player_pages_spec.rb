@@ -52,4 +52,41 @@ describe "Player pages" do
     it { should have_selector 'h1', text: player.name }
     it { should have_selector 'title', text: player.name }
   end
+
+  describe 'edit' do
+    let(:player) { FactoryGirl.create(:player) }
+    before do 
+      sign_in player
+      visit edit_player_path(player)
+    end
+
+    describe 'page' do
+      it { should have_selector 'h1', text: 'Update your profile' }
+      it { should have_selector 'title', text: 'Edit player' }
+      it { should have_link 'change', href: 'http://gravatar.com/emails' } 
+    end
+
+    describe 'with invalid information' do
+      before { click_button 'Save changes' }
+      it { should have_content 'error' }
+    end
+
+    describe 'with valid information' do
+      let(:new_name) { 'New Name' }
+      let(:new_email) { 'new@example.com' }
+      before do
+        fill_in 'Name',             with: new_name
+        fill_in 'Email',            with: new_email
+        fill_in 'Password',         with: player.password
+        fill_in 'Confirm password', with: player.password
+        click_button 'Save changes'
+      end
+
+      it { should have_selector 'title', text: new_name }
+      it { should have_selector 'div.alert.alert-success' }
+      it { should have_link 'Sign out', href: signout_path }
+      specify { player.reload.name.should == new_name }
+      specify { player.reload.email.should == new_email }
+    end
+  end
 end

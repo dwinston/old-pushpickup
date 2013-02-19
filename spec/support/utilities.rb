@@ -1,9 +1,12 @@
 include ApplicationHelper
 
-def valid_signin(player)
+def sign_in(player)
+  visit signin_path
   fill_in 'Email',    with: player.email
   fill_in 'Password', with: player.password
   click_button 'Sign in'
+  # Sign in when not using Capybara as well.
+  cookies[:remember_token] = player.remember_token
 end
 
 RSpec::Matchers.define :have_error_message do |message|
