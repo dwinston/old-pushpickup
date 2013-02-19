@@ -1,4 +1,6 @@
 PushPickup::Application.routes.draw do
+  resources :players
+
   root to: 'static_pages#home'
   
   match '/signup', to: 'players#new'
