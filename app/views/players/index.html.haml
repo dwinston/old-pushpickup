@@ -1,8 +1,9 @@
 - provide :title, 'All players'
 %h1 All players
 
+= will_paginate
+
 %ul.players
-  - @players.each do |player|
-    %li
-      = gravatar_for player, size: 52
-      = link_to player.name, player
+  = render @players
+
+= will_paginate

@@ -35,7 +35,7 @@ class PlayersController < ApplicationController
   end
 
   def index
-    @players = Player.all
+    @players = Player.paginate(page: params[:page])
   end
 
   private

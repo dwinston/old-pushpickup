@@ -91,19 +91,28 @@ describe "Player pages" do
   end
 
   describe 'index' do
-    before do
-      sign_in FactoryGirl.create(:player)
-      FactoryGirl.create(:player, name: 'Bob', email: 'bob@example.com')
-      FactoryGirl.create(:player, name: 'Ben', email: 'ben@example.com')
+
+    let(:player) { FactoryGirl.create :player }
+
+    before(:each) do
+      sign_in player
       visit players_path
     end
 
     it { should have_selector 'title', text: 'All players' }
     it { should have_selector 'h1',    text: 'All players' }
 
-    it 'should list each player' do
-      Player.all.each do |player|
-        page.should have_selector 'li', text: player.name
+    describe 'pagination' do
+
+      before(:all) { 30.times { FactoryGirl.create(:player) } }
+      after(:all) { Player.delete_all }
+
+      it { should have_selector 'div.pagination' }
+
+      it 'should list each player' do
+        Player.paginate(page: 1).each do |player|
+          page.should have_selector 'li', text: player.name
+        end
       end
     end
   end
