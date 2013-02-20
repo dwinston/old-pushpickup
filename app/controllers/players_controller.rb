@@ -1,4 +1,5 @@
 class PlayersController < ApplicationController
+  before_filter :not_signed_in, only: [:create, :new]
   before_filter :signed_in_player, only: [:index, :edit, :update, :destroy]
   before_filter :correct_player,   only: [:edit, :update]
   before_filter :admin_player,     only: :destroy
@@ -46,6 +47,12 @@ class PlayersController < ApplicationController
   end
 
   private
+
+    def not_signed_in
+      if signed_in?
+        redirect_to root_path
+      end
+    end
     
     def signed_in_player
       unless signed_in?

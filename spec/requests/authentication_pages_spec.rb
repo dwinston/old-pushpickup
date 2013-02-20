@@ -36,6 +36,10 @@ describe "Authentication" do
       describe 'followed by signout' do
         before { click_link 'Sign out' }
         it { should have_link 'Sign in' }
+        it { should_not have_link 'Players', href: players_path }
+        it { should_not have_link 'Profile', href: player_path(player) }
+        it { should_not have_link 'Settings', href: edit_player_path(player) }
+        it { should_not have_link 'Sign out', href: signout_path }
       end
     end
   end
@@ -126,6 +130,19 @@ describe "Authentication" do
       before { sign_in admin }
       describe 'cannot destroy self' do
         before { delete player_path(admin) }
+        specify { response.should redirect_to(root_path) }
+      end
+    end
+
+    describe 'as a signed-in player' do
+      let(:player) { FactoryGirl.create(:player) }
+      before { sign_in player }
+      describe 'cannot access Players#new action' do
+        before { get new_player_path }
+        specify { response.should redirect_to(root_path) }
+      end
+      describe 'cannot access Players#create action' do
+        before { post players_path }
         specify { response.should redirect_to(root_path) }
       end
     end

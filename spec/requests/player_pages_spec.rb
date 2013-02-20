@@ -28,7 +28,7 @@ describe "Player pages" do
         fill_in 'Name',         with: 'Example Player'
         fill_in 'Email',        with: 'player@example.com'
         fill_in 'Password',     with: 'foobar'
-        fill_in 'Confirmation', with: 'foobar'
+        fill_in 'Confirm password', with: 'foobar'
       end
 
       it 'should create a player' do
