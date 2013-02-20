@@ -1,6 +1,7 @@
 class PlayersController < ApplicationController
-  before_filter :signed_in_player, only: [:index, :edit, :update]
-  before_filter :correct_player, only: [:edit, :update]
+  before_filter :signed_in_player, only: [:index, :edit, :update, :destroy]
+  before_filter :correct_player,   only: [:edit, :update]
+  before_filter :admin_player,     only: :destroy
 
   def show
     @player = Player.find(params[:id])
@@ -38,6 +39,12 @@ class PlayersController < ApplicationController
     @players = Player.paginate(page: params[:page])
   end
 
+  def destroy
+    @player.destroy
+    flash[:success] = 'Player destroyed'
+    redirect_to players_url
+  end
+
   private
     
     def signed_in_player
@@ -50,5 +57,10 @@ class PlayersController < ApplicationController
     def correct_player
       @player = Player.find(params[:id])
       redirect_to(root_path) unless current_player?(@player)
+    end
+
+    def admin_player
+      @player = Player.find(params[:id])
+      redirect_to(root_path) unless current_player.admin? && !current_player?(@player)
     end
 end

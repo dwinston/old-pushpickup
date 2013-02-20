@@ -1,3 +1,6 @@
 %li
   = gravatar_for player, size: 52
   = link_to player.name, player
+  - if current_player.admin? && !current_player?(player)
+    |
+    = link_to 'delete', player, method: 'delete', data: {confirm: "You sure?" }

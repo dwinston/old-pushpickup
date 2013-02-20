@@ -108,5 +108,26 @@ describe "Authentication" do
         specify { response.should redirect_to(root_path) }
       end
     end
+
+    describe 'as non-admin player' do
+      let(:player) { FactoryGirl.create(:player) }
+      let(:non_admin) { FactoryGirl.create(:player) }
+
+      before { sign_in non_admin }
+
+      describe "submitting a DELETE request to the Players#destroy action" do
+        before { delete player_path(player) }
+        specify { response.should redirect_to(root_path) }
+      end
+    end
+
+    describe 'as admin player' do
+      let(:admin) { FactoryGirl.create(:admin) }
+      before { sign_in admin }
+      describe 'cannot destroy self' do
+        before { delete player_path(admin) }
+        specify { response.should redirect_to(root_path) }
+      end
+    end
   end
 end
