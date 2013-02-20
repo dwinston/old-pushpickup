@@ -1,5 +1,5 @@
 class PlayersController < ApplicationController
-  before_filter :signed_in_player, only: [:edit, :update]
+  before_filter :signed_in_player, only: [:index, :edit, :update]
   before_filter :correct_player, only: [:edit, :update]
 
   def show
@@ -34,10 +34,17 @@ class PlayersController < ApplicationController
     end
   end
 
+  def index
+    @players = Player.all
+  end
+
   private
     
     def signed_in_player
-      redirect_to signin_url, notice: 'Please sign in.' unless signed_in?
+      unless signed_in?
+        store_location
+        redirect_to signin_url, notice: 'Please sign in.'
+      end
     end
 
     def correct_player

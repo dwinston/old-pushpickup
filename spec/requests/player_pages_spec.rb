@@ -89,4 +89,22 @@ describe "Player pages" do
       specify { player.reload.email.should == new_email }
     end
   end
+
+  describe 'index' do
+    before do
+      sign_in FactoryGirl.create(:player)
+      FactoryGirl.create(:player, name: 'Bob', email: 'bob@example.com')
+      FactoryGirl.create(:player, name: 'Ben', email: 'ben@example.com')
+      visit players_path
+    end
+
+    it { should have_selector 'title', text: 'All players' }
+    it { should have_selector 'h1',    text: 'All players' }
+
+    it 'should list each player' do
+      Player.all.each do |player|
+        page.should have_selector 'li', text: player.name
+      end
+    end
+  end
 end

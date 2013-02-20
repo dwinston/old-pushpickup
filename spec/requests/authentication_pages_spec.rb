@@ -26,6 +26,8 @@ describe "Authentication" do
       before { sign_in player } # see spec/support/utilities.rb
 
       it { should have_selector 'title', text: player.name }
+
+      it { should have_link 'Players', href: players_path }
       it { should have_link 'Profile', href: player_path(player) }
       it { should have_link 'Settings', href: edit_player_path(player) }
       it { should have_link 'Sign out', href: signout_path }
@@ -43,6 +45,35 @@ describe "Authentication" do
     describe 'for non-signed-in players' do
       let(:player) { FactoryGirl.create(:player) }
 
+      describe 'when attempting to visit a protected page' do
+        before do
+          visit edit_player_path(player)
+          fill_in 'Email',    with: player.email
+          fill_in 'Password', with: player.password
+          click_button 'Sign in'
+        end
+
+        describe 'after signin in' do
+          it 'should render the desired protected page' do
+            page.should have_selector 'title', text: 'Edit player'
+          end
+        end
+
+        describe 'when signing in again' do
+          before do
+            delete signout_path
+            visit signin_path
+            fill_in 'Email', with: player.email
+            fill_in 'Password', with: player.password
+            click_button 'Sign in'
+          end
+
+          it 'shoulds render the default (profile) page' do
+            page.should have_selector 'title', text: player.name
+          end
+        end
+      end
+
       describe 'in the Players controller' do
 
         describe 'visiting the edit page' do
@@ -53,6 +84,11 @@ describe "Authentication" do
         describe 'submitting to the update action' do
           before { put player_path(player) }
           specify { response.should redirect_to(signin_path) }
+        end
+
+        describe 'visiting the player index action' do
+          before { visit players_path }
+          it { should have_selector 'title', text: 'Sign in' }
         end
       end
     end
