@@ -7,6 +7,7 @@ gem 'bcrypt-ruby', '3.0.1'
 gem 'faker', '1.0.1'
 gem 'will_paginate', '3.0.3'
 gem 'bootstrap-will_paginate', '0.0.6'
+gem 'dotiw', '1.1.1' # better distance_of_time_in_words
 
 group :development, :test do
   gem 'sqlite3', '1.3.5'

@@ -16,5 +16,14 @@ namespace :db do
                      password: password,
                      password_confirmation: password)
     end
+
+    players = Player.all(limit: 6)
+    50.times do
+      start_time = rand(13.days).since(2.hours.from_now).beginning_of_hour
+      duration = [45, 60, 75, 90, 105, 120].sample
+      players.each do |player| 
+        player.availabilities.create!(start_time: start_time, duration: duration)
+      end
+    end
   end
 end
