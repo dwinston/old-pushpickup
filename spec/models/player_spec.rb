@@ -2,11 +2,14 @@
 #
 # Table name: players
 #
-#  id         :integer          not null, primary key
-#  name       :string(255)
-#  email      :string(255)
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id              :integer          not null, primary key
+#  name            :string(255)
+#  email           :string(255)
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  password_digest :string(255)
+#  remember_token  :string(255)
+#  admin           :boolean          default(FALSE)
 #
 
 require 'spec_helper'
@@ -27,6 +30,7 @@ describe Player do
   it { should respond_to :remember_token }
   it { should respond_to :admin }
   it { should respond_to :authenticate }
+  it { should respond_to :availabilities }
 
   it { should be_valid }
   it { should_not be_admin }
@@ -142,5 +146,32 @@ describe Player do
   describe 'remember token' do
     before { @player.save }
     its(:remember_token) { should_not be_blank }
+  end
+
+  describe 'availability associations' do
+    before { @player.save }
+    let(:now) { DateTime.now }
+    let!(:later_availability) do
+      FactoryGirl.create(:availability, player: @player, 
+                         start_time: now.advance(days: 5))
+    end
+    let!(:sooner_availability) do
+      FactoryGirl.create(:availability, player: @player, 
+                         start_time: now.advance(hours: 5))
+    end
+
+    it 'should have the right availabilities in the right order' do
+      @player.availabilities.should == 
+        [sooner_availability, later_availability]
+    end
+
+    it "should destroy associated availabilities" do
+      availabilities = @player.availabilities.dup
+      @player.destroy
+      availabilities.should_not be_empty
+      availabilities.each do |availability|
+        Availability.find_by_id(availability.id).should be_nil
+      end
+    end
   end
 end

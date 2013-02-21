@@ -11,7 +11,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130220011159) do
+ActiveRecord::Schema.define(:version => 20130220235513) do
+
+  create_table "availabilities", :force => true do |t|
+    t.datetime "start_time"
+    t.integer  "player_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "duration"
+  end
+
+  add_index "availabilities", ["player_id", "start_time"], :name => "index_availabilities_on_player_id_and_start_time"
 
   create_table "players", :force => true do |t|
     t.string   "name"
