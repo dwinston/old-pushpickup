@@ -5,3 +5,9 @@
       %h1
         = gravatar_for @player
         = @player.name
+  .span8
+    - if @player.availabilities.any?
+      %h3 Availabilities (#{@player.availabilities.count})
+      %ol.availabilities
+        = render @availabilities
+      = will_paginate @availabilities

@@ -47,10 +47,21 @@ describe "Player pages" do
 
   describe 'profile' do
     let(:player) { FactoryGirl.create :player }
+    let(:sooner) { DateTime.now.advance(days: 1) }
+    let(:later) { sooner.advance(days: 1) }
+    let!(:a1) { FactoryGirl.create(:availability, player: player, start_time: sooner) }
+    let!(:a2) { FactoryGirl.create(:availability, player: player, start_time: later) }
+
     before { visit player_path(player) }
 
     it { should have_selector 'h1', text: player.name }
     it { should have_selector 'title', text: player.name }
+
+    describe 'availabilities' do
+      it { should have_content a1.start_time_to_s }
+      it { should have_content a2.start_time_to_s }
+      it { should have_content player.availabilities.count }
+    end
   end
 
   describe 'edit' do

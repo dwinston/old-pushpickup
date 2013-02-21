@@ -6,6 +6,7 @@ class PlayersController < ApplicationController
 
   def show
     @player = Player.find(params[:id])
+    @availabilities = @player.availabilities.paginate(page: params[:page])
   end
 
   def new

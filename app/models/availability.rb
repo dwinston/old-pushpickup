@@ -9,6 +9,7 @@
 #  updated_at :datetime         not null
 #  duration   :integer
 #
+include ActionView::Helpers::DateHelper
 
 class Availability < ActiveRecord::Base
   attr_accessible :start_time, :duration
@@ -19,6 +20,14 @@ class Availability < ActiveRecord::Base
   validate :duration_under_one_day
   validates :player_id, presence: true
   default_scope order: 'availabilities.start_time ASC'
+
+  def start_time_to_s
+    start_time.strftime("%A, %B #{start_time.day.ordinalize}, %I:%M%p")
+  end
+
+  def duration_to_s
+    distance_of_time_in_words(start_time, start_time.advance(minutes: duration))
+  end
 
   private
 
