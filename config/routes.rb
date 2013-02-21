@@ -1,6 +1,7 @@
 PushPickup::Application.routes.draw do
   resources :players
   resources :sessions, only: [:new, :create, :destroy]
+  resources :availabilities, only: [:create, :destroy]
 
   root to: 'static_pages#home'
   
