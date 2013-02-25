@@ -1,0 +1,4 @@
+%a{href: player_path(current_player)}= gravatar_for current_player, size: 52
+%h1= current_player.name
+%span= link_to 'view your profile', current_player
+%span= pluralize(current_player.availabilities.count, 'availability')

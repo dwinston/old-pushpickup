@@ -1,3 +1,7 @@
 %li
   %span.start_time= availability.start_time_to_s
   %span.duration for #{availability.duration_to_s}.
+  - if current_player?(availability.player)
+    = link_to 'delete', availability, method: :delete,
+                                      data: { confirm: 'You sure?' },
+                                      title: availability.start_time_to_s

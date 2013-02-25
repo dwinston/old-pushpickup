@@ -14,6 +14,25 @@ describe "StaticPages" do
     let(:heading) { 'Push Pickup' }
     let(:page_title) { '' }
     it_should_behave_like "all static pages"
+
+    describe 'for signed-in players' do
+      let(:player) { FactoryGirl.create(:player) }
+      let(:soonest) { DateTime.now.advance(hours: 1).beginning_of_hour }
+      before do
+        FactoryGirl.create(:availability, player: player, 
+                           start_time: soonest)
+        FactoryGirl.create(:availability, player: player, 
+                           start_time: soonest.advance(days: 1))
+        sign_in player
+        visit root_path
+      end
+
+      it "should render the player's feed" do
+        player.feed.each do |item|
+          page.should have_selector "li##{item.id}", text: item.start_time_to_s
+        end
+      end
+    end
   end 
   
   describe "Help page" do

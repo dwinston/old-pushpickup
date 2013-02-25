@@ -17,8 +17,8 @@ describe Availability do
   let(:player) { FactoryGirl.create(:player) }
   before do
     @now = DateTime.now
-    @availability = player.availabilities.build(start_time: @now.advance(days: 5), 
-                                                duration: 120)
+    @availability = player.availabilities.build(
+      start_time: @now.advance(days: 5).beginning_of_hour, duration: 120)
   end
   subject { @availability }
 

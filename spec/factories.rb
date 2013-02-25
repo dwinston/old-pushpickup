@@ -11,7 +11,7 @@ FactoryGirl.define do
   end
 
   factory :availability do
-    start_time { DateTime.now.advance(days: 5) }
+    start_time { DateTime.now.advance(days: 5).beginning_of_hour }
     duration 120
     player
   end

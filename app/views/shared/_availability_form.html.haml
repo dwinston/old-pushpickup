@@ -1,0 +1,7 @@
+= form_for(@availability) do |f|
+  = render 'shared/error_messages', object: f.object
+  = f.label :start_time
+  .field= f.text_field :start_time, placeholder: 'this tuesday at 5:15pm'
+  = f.label :duration 
+  .field= f.text_field :duration, placeholder: '2 h and 30 m'
+  = f.submit 'Post', class: 'btn btn-large btn-primary'

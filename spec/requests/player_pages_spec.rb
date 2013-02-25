@@ -47,7 +47,7 @@ describe "Player pages" do
 
   describe 'profile' do
     let(:player) { FactoryGirl.create :player }
-    let(:sooner) { DateTime.now.advance(days: 1) }
+    let(:sooner) { DateTime.now.advance(days: 1).beginning_of_hour }
     let(:later) { sooner.advance(days: 1) }
     let!(:a1) { FactoryGirl.create(:availability, player: player, start_time: sooner) }
     let!(:a2) { FactoryGirl.create(:availability, player: player, start_time: later) }
@@ -61,6 +61,16 @@ describe "Player pages" do
       it { should have_content a1.start_time_to_s }
       it { should have_content a2.start_time_to_s }
       it { should have_content player.availabilities.count }
+
+      describe 'should not show if in past' do
+        before do
+          a1.start_time = 2.days.ago.beginning_of_hour
+          a1.save(validate: false)
+          visit player_path(player)
+        end
+        it { should_not have_content a1.start_time_to_s }
+        it { should have_content a2.start_time_to_s }
+      end
     end
   end
 

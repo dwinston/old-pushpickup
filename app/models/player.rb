@@ -25,6 +25,10 @@ class Player < ActiveRecord::Base
                     uniqueness: { case_sensitive: false }
   validates :password, length: { minimum: 6 }
   validates :password_confirmation, presence: true
+
+  def feed
+    Availability.where("player_id = ? AND start_time > ?", id, DateTime.now)
+  end
   
   private
 

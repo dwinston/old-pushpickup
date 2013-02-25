@@ -153,11 +153,11 @@ describe Player do
     let(:now) { DateTime.now }
     let!(:later_availability) do
       FactoryGirl.create(:availability, player: @player, 
-                         start_time: now.advance(days: 5))
+                         start_time: now.advance(days: 5).beginning_of_hour)
     end
     let!(:sooner_availability) do
       FactoryGirl.create(:availability, player: @player, 
-                         start_time: now.advance(hours: 5))
+                         start_time: now.advance(hours: 5).beginning_of_hour)
     end
 
     it 'should have the right availabilities in the right order' do
@@ -172,6 +172,16 @@ describe Player do
       availabilities.each do |availability|
         Availability.find_by_id(availability.id).should be_nil
       end
+    end
+
+    describe 'status' do
+      let(:unfollowed_availability) do
+        FactoryGirl.create(:availability, player: FactoryGirl.create(:player))
+      end
+
+      its(:feed) { should include sooner_availability }
+      its(:feed) { should include later_availability }
+      its(:feed) { should_not include unfollowed_availability }
     end
   end
 end

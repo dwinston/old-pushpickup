@@ -6,7 +6,8 @@ class PlayersController < ApplicationController
 
   def show
     @player = Player.find(params[:id])
-    @availabilities = @player.availabilities.paginate(page: params[:page])
+    @availabilities = @player.availabilities.where('start_time > ?', DateTime.now).
+      paginate(page: params[:page])
   end
 
   def new
