@@ -1,0 +1,10 @@
+- provide :title, 'Add field'
+%h1 Add field
+
+.row
+  .span6.offset3
+    = form_for(@field) do |f|
+      = render 'fields', f: f
+      = f.submit 'Submit', class: 'btn btn-large btn-primary'
+
+

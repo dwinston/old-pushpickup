@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130226164505) do
+ActiveRecord::Schema.define(:version => 20130226202301) do
 
   create_table "availabilities", :force => true do |t|
     t.datetime "start_time"
@@ -25,14 +25,16 @@ ActiveRecord::Schema.define(:version => 20130226164505) do
 
   create_table "fields", :force => true do |t|
     t.string   "name"
-    t.string   "full_address"
     t.string   "city"
     t.text     "notes"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.string   "street_address"
+    t.string   "state_abbr"
+    t.string   "zip_code"
   end
 
-  add_index "fields", ["city"], :name => "index_fields_on_city"
+  add_index "fields", ["city", "state_abbr"], :name => "index_fields_on_city_and_state_abbr"
 
   create_table "players", :force => true do |t|
     t.string   "name"

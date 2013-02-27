@@ -9,6 +9,18 @@
 #  updated_at :datetime         not null
 #  duration   :integer
 #
+
+# == Schema Information
+#
+# Table name: availabilities
+#
+#  id         :integer          not null, primary key
+#  start_time :datetime
+#  player_id  :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  duration   :integer
+#
 include ActionView::Helpers::DateHelper
 
 class Availability < ActiveRecord::Base

@@ -1,17 +1,28 @@
+# == Schema Information
+#
+# Table name: fields
+#
+#  id             :integer          not null, primary key
+#  name           :string(255)
+#  city           :string(255)
+#  notes          :text
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  street_address :string(255)
+#  state_abbr     :string(255)
+#  zip_code       :string(255)
+#
+
 class Field < ActiveRecord::Base
-  attr_accessible :city, :full_address, :name, :notes
+  attr_accessible :city, :state_abbr, :name, :notes, :zip_code, :street_address
 
-  validates :city, format: { with: /\A[A-Z][a-z]+( [A-Z][a-z]+)*, [A-Z]{2}\z/ }
-  validates :full_address, presence: true
-  validate :city_is_part_of_full_address
+  before_save { state_abbr.upcase! } 
+  before_save { |field| field.city = field.city.titlecase }
+
+  validates :city, format: { with: /\A[A-Z][a-z]+( [A-Z][a-z]+)*\z/i }
+  validates :state_abbr, format: { with: /\A[A-Z]{2}\z/i }
+  validates :name, presence: true
+  validates :zip_code, presence: true
+  validates :street_address, presence: true
   
-  private
-
-    def city_is_part_of_full_address
-      embedded_city = full_address.scan(city).shift 
-      if embedded_city.nil? 
-        errors.add(:full_address, 'must contain city')
-      end
-    end
-
 end
