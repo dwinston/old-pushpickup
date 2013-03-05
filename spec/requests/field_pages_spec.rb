@@ -5,6 +5,7 @@ describe "FieldPages" do
   subject { page }
   let(:player) { FactoryGirl.create(:player) }
   let(:admin) { FactoryGirl.create(:admin) }
+  before { sign_in admin }
 
   describe 'field creation' do
 
