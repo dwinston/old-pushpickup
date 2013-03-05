@@ -1,4 +1,6 @@
 class FieldsController < ApplicationController
+  before_filter :admin_player  
+
   def new
     @field = Field.new
   end
@@ -12,4 +14,10 @@ class FieldsController < ApplicationController
       render 'new'
     end
   end
+
+  private
+
+    def admin_player
+      redirect_to(root_path) unless current_player.admin? 
+    end
 end

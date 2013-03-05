@@ -43,5 +43,6 @@ describe "AvailabilityPages" do
         expect { click_link 'delete' }.to change(Availability, :count).by(-1)
       end
     end
+
   end
 end

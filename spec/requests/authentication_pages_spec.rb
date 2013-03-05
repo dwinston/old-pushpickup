@@ -136,6 +136,23 @@ describe "Authentication" do
         before { delete player_path(player) }
         specify { response.should redirect_to(root_path) }
       end
+
+      describe 'in the Fields controller' do
+        describe 'cannot access new action' do
+          before { get new_field_path }
+          specify { response.should redirect_to root_path }
+        end
+
+        describe 'submitting to the create action' do
+          before { post fields_path }
+          specify { response.should redirect_to root_path }
+        end
+
+        describe 'submitting to the destroy action' do
+          before { delete field_path(FactoryGirl.create(:field)) }
+          specify { response.should redirect_to root_path }
+        end
+      end
     end
 
     describe 'as admin player' do

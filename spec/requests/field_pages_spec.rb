@@ -18,6 +18,7 @@ describe "FieldPages" do
     end
 
     describe 'with invalid information' do
+      before { visit new_field_path }
 
       it 'should not create an availability' do
         expect { click_button 'Submit' }.not_to change(Field, :count)
