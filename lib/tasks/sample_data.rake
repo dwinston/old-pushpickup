@@ -7,7 +7,7 @@ namespace :db do
                            password_confirmation: 'foobar')
     admin.toggle!(:admin)
 
-    99.times do |n|
+    10.times do |n|
       name = Faker::Name.name
       email = "example-#{n+1}@railstutorial.org"
       password = 'password'
@@ -18,11 +18,29 @@ namespace :db do
     end
 
     players = Player.all(limit: 6)
-    50.times do
+    10.times do
       start_time = rand(13.days).since(2.hours.from_now).beginning_of_hour
       duration = [45, 60, 75, 90, 105, 120].sample
       players.each do |player| 
         player.availabilities.create!(start_time: start_time, duration: duration)
+      end
+    end
+
+    5.times do
+      city = Faker::Address.city
+      state_abbr = Faker::Address.state_abbr 
+      City.create!(name: "#{city}, #{state_abbr}")
+    end
+
+    cities = City.all(limit: 5)
+    5.times do
+      cities.each do |city|
+        name = Faker::Name.last_name + ' Park'
+        street_address = Faker::Address.street_address 
+        zip_code = Faker::Address.zip_code 
+        notes = Faker::Lorem.paragraphs.join("\n")
+        city.fields.create!(name: name, street_address: street_address, 
+                            zip_code: zip_code, notes: notes)
       end
     end
   end

@@ -156,6 +156,10 @@ input, textarea, select, .uneditable-input {
   @include box_sizing;
 }
 
+select {
+  padding: 0px;
+}
+
 input {
   height: auto !important;
 }
@@ -213,5 +217,20 @@ aside {
   textarea {
     height: 100px;
     margin-bottom: 5px;
+  }
+}
+
+/* fields index */
+
+.fields {
+  list-style: none;
+  margin: 0;
+  li {
+    overflow: auto;
+    padding: 10px 0;
+    border-top: 1px solid $grayLighter;
+    &:last-child {
+      border-bottom: 1px solid $grayLighter;
+    }
   }
 }

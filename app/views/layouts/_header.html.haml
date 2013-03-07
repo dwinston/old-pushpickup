@@ -7,13 +7,13 @@
           %li= link_to "Home", root_path
           %li= link_to "Help", help_path
           - if signed_in?
-            %li= link_to 'Players', players_path
+            - if current_player.admin?
+              %li= link_to 'Players', players_path
             %li#fat-menu.dropdown
               %a.dropdown-toggle{:href => '#', :data => {:toggle => 'dropdown'}}
                 Account
                 %b.caret
               %ul.dropdown-menu
-                %li= link_to 'Profile', current_player
                 %li= link_to 'Settings', edit_player_path(current_player)
                 %li.divider
                 %li= link_to 'Sign out', signout_path, method: 'delete'

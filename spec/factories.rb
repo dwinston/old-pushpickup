@@ -16,12 +16,15 @@ FactoryGirl.define do
     player
   end
 
+  factory :city do
+    name Faker::Address.city + ', ' +  Faker::Address.state_abbr
+  end
+
   factory :field do
     name Faker::Name.last_name + ' Park'
     street_address Faker::Address.street_address 
-    city Faker::Address.city 
-    state_abbr Faker::Address.state_abbr 
     zip_code Faker::Address.zip_code 
     notes Faker::Lorem.paragraphs.join("\n")
+    city
   end
 end

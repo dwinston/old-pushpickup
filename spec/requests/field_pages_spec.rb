@@ -1,17 +1,21 @@
 require 'spec_helper'
 
-describe "FieldPages" do
+describe "Field Pages" do
 
   subject { page }
   let(:player) { FactoryGirl.create(:player) }
   let(:admin) { FactoryGirl.create(:admin) }
-  before { sign_in admin }
+  let(:city) { FactoryGirl.create(:city) }
+  let!(:field) { FactoryGirl.create(:field, city: city) }
+  before do 
+    sign_in admin
+  end
 
   describe 'field creation' do
 
     describe 'with valid information' do
 
-      before { submit_field FactoryGirl.build(:field) }
+      before { fill_in_field_form FactoryGirl.build(:field) }
 
       it 'should create a new field' do
         expect { click_button 'Submit' }.to change(Field, :count).by(1)
@@ -30,6 +34,53 @@ describe "FieldPages" do
         it { should have_content 'error' }
       end
     end
-    
+  end
+
+  describe 'index' do
+    before do 
+      visit fields_path
+    end
+
+    describe 'as non-admin' do
+      let(:player) { FactoryGirl.create :player }
+      before do
+        sign_in player
+        visit fields_path
+      end
+
+      it { should_not have_link 'Add field', href: new_field_path }
+    end
+      
+
+    it { should have_selector 'title', text: 'Find fields' }
+    it { should have_link 'Add field', href: new_field_path }
+    it { should_not have_content field.name }
+
+    describe 'after a search' do
+      before do
+        select city.name, from: :city_id
+        click_button 'Find'
+      end
+
+      it { should have_content field.name }
+      it { should have_link 'delete', href: field_path(field) }
+      it { should have_link 'edit', href: edit_field_path(field) }
+      it { should have_link 'map', href: google_maps_link(field) }
+
+      it 'can delete a field' do
+        expect { click_link 'delete' }.to change(Field, :count).by(-1)
+      end
+
+      describe 'editing a field' do
+        let(:new_field_name) { Faker::Name.last_name + ' Hill' }
+        before do 
+          visit edit_field_path(field)
+          fill_in 'Name', with: new_field_name 
+          click_button 'Submit'
+        end
+
+        it { should have_content new_field_name }
+      end
+    end
   end
 end

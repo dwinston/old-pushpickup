@@ -1,0 +1,5 @@
+%li
+  = city.name
+  - if current_player.admin?
+    |
+    = link_to 'delete', city, method: 'delete', data: {confirm: "You sure?" }

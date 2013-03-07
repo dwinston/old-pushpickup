@@ -5,6 +5,7 @@ PushPickup::Application.routes.draw do
   resources :sessions, only: [:new, :create, :destroy]
   resources :availabilities, only: [:create, :destroy]
   resources :fields
+  resources :cities, only: [:index, :new, :create, :destroy]
 
   root to: 'static_pages#home'
   

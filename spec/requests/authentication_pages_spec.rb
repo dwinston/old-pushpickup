@@ -25,10 +25,8 @@ describe "Authentication" do
       let(:player) { FactoryGirl.create(:player) }
       before { sign_in player } # see spec/support/utilities.rb
 
-      it { should have_selector 'title', text: player.name }
+      it { should have_content player.name }
 
-      it { should have_link 'Players', href: players_path }
-      it { should have_link 'Profile', href: player_path(player) }
       it { should have_link 'Settings', href: edit_player_path(player) }
       it { should have_link 'Sign out', href: signout_path }
       it { should_not have_link 'Sign in', href: signin_path }
@@ -72,8 +70,8 @@ describe "Authentication" do
             click_button 'Sign in'
           end
 
-          it 'shoulds render the default (profile) page' do
-            page.should have_selector 'title', text: player.name
+          it 'shoulds render the default (home) page' do
+            page.should have_content player.name
           end
         end
       end
@@ -131,6 +129,14 @@ describe "Authentication" do
       let(:non_admin) { FactoryGirl.create(:player) }
 
       before { sign_in non_admin }
+      
+      describe 'should not see index of all players' do
+        it { should_not have_link 'Players', href: players_path }
+        describe 'cannot access Player#index action' do
+          before { get players_path }
+          specify { response.should redirect_to(root_path) }
+        end
+      end
 
       describe "submitting a DELETE request to the Players#destroy action" do
         before { delete player_path(player) }
@@ -138,7 +144,9 @@ describe "Authentication" do
       end
 
       describe 'in the Fields controller' do
-        describe 'cannot access new action' do
+        let(:field) { FactoryGirl.create(:field) }
+
+        describe 'cannot access new page' do
           before { get new_field_path }
           specify { response.should redirect_to root_path }
         end
@@ -147,9 +155,19 @@ describe "Authentication" do
           before { post fields_path }
           specify { response.should redirect_to root_path }
         end
+        
+        describe 'cannot access edit page' do
+          before { get edit_field_path(field) }
+          specify { response.should redirect_to root_path }
+        end
+
+        describe 'submitting to the update action' do
+          before { put field_path(field) }
+          specify { response.should redirect_to root_path }
+        end
 
         describe 'submitting to the destroy action' do
-          before { delete field_path(FactoryGirl.create(:field)) }
+          before { delete field_path(field) }
           specify { response.should redirect_to root_path }
         end
       end
@@ -158,6 +176,9 @@ describe "Authentication" do
     describe 'as admin player' do
       let(:admin) { FactoryGirl.create(:admin) }
       before { sign_in admin }
+
+      it { should have_link 'Players', href: players_path }
+
       describe 'cannot destroy self' do
         before { delete player_path(admin) }
         specify { response.should redirect_to(root_path) }

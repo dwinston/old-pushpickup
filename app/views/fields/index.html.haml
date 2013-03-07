@@ -1,0 +1,15 @@
+- provide :title, 'Find fields'
+%h1 Find fields
+.row
+  .span4
+    = form_tag fields_path, method: 'get' do 
+      = label_tag :city_id, 'Select one or more cities to find fields'
+      = select_tag :city_id, options_from_collection_for_select(City.all, :id, :name, @cities), 
+                   multiple: true, size: 10
+      = submit_tag 'Find', class: 'btn btn-large btn-primary'
+    - if current_player.admin?
+      = link_to 'Add field', new_field_path
+  .span8
+    %ul.fields
+      = render @fields
+

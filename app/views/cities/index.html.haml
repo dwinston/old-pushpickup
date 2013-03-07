@@ -1,0 +1,6 @@
+- provide :title, 'All cities'
+%h1 All cities
+
+%ul.cities
+  = render @cities
+= link_to 'Add city', new_city_path

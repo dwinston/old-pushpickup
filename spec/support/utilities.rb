@@ -1,4 +1,5 @@
 include ApplicationHelper
+include FieldsHelper
 
 def sign_in(player)
   visit signin_path
@@ -9,12 +10,11 @@ def sign_in(player)
   cookies[:remember_token] = player.remember_token
 end
 
-def submit_field(field)
+def fill_in_field_form(field)
   visit new_field_path
   fill_in 'Name', with: field.name
   fill_in 'Street address', with: field.street_address
-  fill_in 'City', with: field.city
-  fill_in 'State', with: field.state_abbr
+  select field.city.name, from: 'City'
   fill_in 'Zip', with: field.zip_code
   fill_in 'Notes', with: field.notes
 end

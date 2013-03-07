@@ -24,8 +24,8 @@ describe Availability do
 
   it { should respond_to :start_time }
   it { should respond_to :duration }
-  it { should respond_to :player_id }
   it { should respond_to :player }
+  it { should respond_to :fields }
   its(:player) { should == player }
 
   it { should be_valid }

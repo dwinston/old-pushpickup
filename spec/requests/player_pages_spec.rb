@@ -38,24 +38,26 @@ describe "Player pages" do
       describe 'after saving the user' do
         before { click_button submit }
         let(:player) { Player.find_by_email('player@example.com') }
-        it { should have_selector 'title', text: player.name }
+        it { should have_content player.name }
         it { should have_selector 'div.alert.alert-success', text: 'Welcome' }
         it { should have_link 'Sign out' }
       end
     end
   end
 
-  describe 'profile' do
+  describe 'home page after sign-in' do
     let(:player) { FactoryGirl.create :player }
     let(:sooner) { DateTime.now.advance(days: 1).beginning_of_hour }
     let(:later) { sooner.advance(days: 1) }
     let!(:a1) { FactoryGirl.create(:availability, player: player, start_time: sooner) }
     let!(:a2) { FactoryGirl.create(:availability, player: player, start_time: later) }
 
-    before { visit player_path(player) }
+    before do
+      sign_in player
+      visit root_url
+    end
 
-    it { should have_selector 'h1', text: player.name }
-    it { should have_selector 'title', text: player.name }
+    it { should have_content player.name }
 
     describe 'availabilities' do
       it { should have_content a1.start_time_to_s }
@@ -103,7 +105,7 @@ describe "Player pages" do
         click_button 'Save changes'
       end
 
-      it { should have_selector 'title', text: new_name }
+      it { should have_content new_name }
       it { should have_selector 'div.alert.alert-success' }
       it { should have_link 'Sign out', href: signout_path }
       specify { player.reload.name.should == new_name }
@@ -113,10 +115,10 @@ describe "Player pages" do
 
   describe 'index' do
 
-    let(:player) { FactoryGirl.create :player }
+  let(:admin) { FactoryGirl.create :admin }
 
     before(:each) do
-      sign_in player
+      sign_in admin
       visit players_path
     end
 
@@ -139,16 +141,17 @@ describe "Player pages" do
 
     describe 'delete links' do
 
-      it { should_not have_link 'delete' }
+      # Currently, only admin users can access Players index.
+      #it { should_not have_link 'delete' }
 
       describe 'as an admin user' do
-        let(:admin) { FactoryGirl.create(:admin) }
+        let!(:player) { FactoryGirl.create(:player) }
         before do
           sign_in admin
           visit players_path
         end
 
-        it { should have_link 'delete', href: player_path(Player.first) }
+        it { should have_link 'delete', href: player_path(Player.last) }
         it "should be able to delete another player" do
           expect { click_link 'delete' }.to change(Player, :count).by(-1)
         end
