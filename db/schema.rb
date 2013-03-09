@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130305202313) do
+ActiveRecord::Schema.define(:version => 20130307195130) do
 
   create_table "availabilities", :force => true do |t|
     t.datetime "start_time"
@@ -38,6 +38,17 @@ ActiveRecord::Schema.define(:version => 20130305202313) do
     t.string   "zip_code"
     t.integer  "city_id"
   end
+
+  create_table "fieldslots", :force => true do |t|
+    t.integer  "availability_id"
+    t.integer  "field_id"
+    t.boolean  "open",            :default => true
+    t.string   "why_not_open"
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
+  end
+
+  add_index "fieldslots", ["open"], :name => "index_fieldslots_on_open"
 
   create_table "players", :force => true do |t|
     t.string   "name"

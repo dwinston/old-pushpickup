@@ -16,6 +16,7 @@ class Player < ActiveRecord::Base
   attr_accessible :email, :name, :password, :password_confirmation
   has_secure_password
   has_many :availabilities, dependent: :destroy
+  has_many :fields, through: :availabilities
   
   before_save { email.downcase! }
   before_save :create_remember_token

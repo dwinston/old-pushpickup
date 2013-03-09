@@ -10,22 +10,13 @@
 #  duration   :integer
 #
 
-# == Schema Information
-#
-# Table name: availabilities
-#
-#  id         :integer          not null, primary key
-#  start_time :datetime
-#  player_id  :integer
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  duration   :integer
-#
 include ActionView::Helpers::DateHelper
 
 class Availability < ActiveRecord::Base
-  attr_accessible :start_time, :duration
+  attr_accessible :start_time, :duration, :field_ids
   belongs_to :player
+  has_many :fieldslots
+  has_many :fields, through: :fieldslots
 
   valid_times = 
     Enumerator.new do |y|
@@ -42,6 +33,7 @@ class Availability < ActiveRecord::Base
   validates :duration, numericality: { only_integer: true, 
     less_than: 24 * 60, message: 'must be under one day'}
   validates :player_id, presence: true
+  validate :at_least_one_field
   default_scope order: 'availabilities.start_time ASC'
 
   def start_time_to_s
@@ -54,6 +46,10 @@ class Availability < ActiveRecord::Base
   end
   
   private
+
+    def at_least_one_field
+      errors.add(:base, 'Availability must include at least one Field') if self.fields.blank?
+    end
 
     def start_time_between_now_and_two_weeks_from_now
       now = DateTime.now

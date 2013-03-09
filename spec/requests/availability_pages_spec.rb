@@ -4,7 +4,12 @@ describe "AvailabilityPages" do
   subject { page }
 
   let(:player) { FactoryGirl.create(:player) }
-  before { sign_in player }
+  let(:field) {  FactoryGirl.create(:field) }
+  let(:availability) { FactoryGirl.create(:availability, player: player) }
+  before do 
+    availability.fields = [field]
+    sign_in player 
+  end
 
   describe 'availability creation' do
     before { visit root_path }
@@ -24,8 +29,9 @@ describe "AvailabilityPages" do
     describe 'with valid information' do
 
       before do
-        fill_in 'availability_start_time', with: 'this sunday 2pm'
-        fill_in 'availability_duration', with: '2 hours'
+        fill_in 'Start time', with: 'this sunday 2pm'
+        fill_in 'Duration', with: '2 hours'
+        check field.name
       end
       it 'should create an availability' do
         expect { click_button 'Post' }.to change(Availability, :count).by(1)

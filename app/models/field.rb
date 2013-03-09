@@ -15,6 +15,8 @@
 class Field < ActiveRecord::Base
   attr_accessible :name, :notes, :zip_code, :street_address, :city_id
   belongs_to :city
+  has_many :fieldslots
+  has_many :availabilities, through: :fieldslots
 
   validates :name, presence: true
   validates :zip_code, presence: true

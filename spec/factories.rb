@@ -14,6 +14,9 @@ FactoryGirl.define do
     start_time { DateTime.now.advance(days: 5).beginning_of_hour }
     duration 120
     player
+    before(:create) do |availability|
+      availability.fields << FactoryGirl.build(:field)
+    end
   end
 
   factory :city do
@@ -26,5 +29,15 @@ FactoryGirl.define do
     zip_code Faker::Address.zip_code 
     notes Faker::Lorem.paragraphs.join("\n")
     city
+  end
+
+  factory :fieldslot do
+    availability
+    field
+
+    factory :closed_fieldslot do
+      open false
+      why_not_open 'Zombie apocalypse'
+    end
   end
 end

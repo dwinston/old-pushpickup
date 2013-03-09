@@ -20,6 +20,11 @@ describe City do
   it { should respond_to :fields }
 
   it { should be_valid }
+
+  describe 'with an invalid name' do
+    before { city.name = 'Beehive, Mass.' }
+    it { should_not be_valid }
+  end
   
   describe 'when destroyed' do
     before do

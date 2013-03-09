@@ -1,7 +1,17 @@
 = form_for(@availability) do |f|
   = render 'shared/error_messages', object: f.object
+
   = f.label :start_time
   .field= f.text_field :start_time, placeholder: 'this tuesday at 5:15pm'
+
   = f.label :duration 
   .field= f.text_field :duration, placeholder: '2 h and 30 m'
+
+  .field
+    = hidden_field_tag "availability[field_ids][]", nil
+    - current_player.fields.uniq.each do |field|
+      = check_box_tag "availability[field_ids][]", field.id, 
+                      @availability.field_ids.include?(field.id), id: dom_id(field)
+      = label_tag dom_id(field), field.name
+
   = f.submit 'Post', class: 'btn btn-large btn-primary'

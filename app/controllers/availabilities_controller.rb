@@ -11,7 +11,8 @@ class AvailabilitiesController < ApplicationController
       duration = ChronicDuration.parse(params[:availability][:duration],
                                         default_unit: 'minutes')
       duration = (duration / 60).round unless duration.nil? # sec to minutes
-      params[:availability] = {start_time: start_time, duration: duration}
+      params[:availability][:start_time] = start_time
+      params[:availability][:duration] = duration
     end
 
     @availability = current_player.availabilities.build(params[:availability])

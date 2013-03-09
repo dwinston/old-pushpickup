@@ -17,15 +17,6 @@ namespace :db do
                      password_confirmation: password)
     end
 
-    players = Player.all(limit: 6)
-    10.times do
-      start_time = rand(13.days).since(2.hours.from_now).beginning_of_hour
-      duration = [45, 60, 75, 90, 105, 120].sample
-      players.each do |player| 
-        player.availabilities.create!(start_time: start_time, duration: duration)
-      end
-    end
-
     5.times do
       city = Faker::Address.city
       state_abbr = Faker::Address.state_abbr 
@@ -41,6 +32,17 @@ namespace :db do
         notes = Faker::Lorem.paragraphs.join("\n")
         city.fields.create!(name: name, street_address: street_address, 
                             zip_code: zip_code, notes: notes)
+      end
+    end
+
+    players = Player.all(limit: 6)
+    10.times do
+      start_time = rand(13.days).since(2.hours.from_now).beginning_of_hour
+      duration = [45, 60, 75, 90, 105, 120].sample
+      players.each do |player| 
+        availability = player.availabilities.build(start_time: start_time, duration: duration)
+        availability.fields << Field.all.sample
+        availability.save!
       end
     end
   end
