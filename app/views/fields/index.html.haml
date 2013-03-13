@@ -3,13 +3,19 @@
 .row
   .span4
     = form_tag fields_path, method: 'get' do 
-      = label_tag :city_id, 'Select one or more cities to find fields'
+      = label_tag :city_id, 'Select one or multiple cities to find fields'
       = select_tag :city_id, options_from_collection_for_select(City.all, :id, :name, @cities), 
                    multiple: true, size: 10
-      = submit_tag 'Find', class: 'btn btn-large btn-primary'
+      = submit_tag 'Find', class: 'btn btn-primary'
     - if current_player.admin?
       = link_to 'Add field', new_field_path
   .span8
-    %ul.fields
-      = render @fields
+    %p.text-info Please select one or more fields 
+    = form_tag availabilities_path, method: 'post' do
+      = hidden_field_tag "availability[field_ids][]", nil
+      = submit_tag 'Choose field(s)', class: 'btn btn-large btn-primary'
+      %ul.fields
+        = render @fields
+      = submit_tag 'Choose field(s)', class: 'btn btn-large btn-primary'
+
 

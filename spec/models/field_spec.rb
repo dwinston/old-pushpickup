@@ -28,4 +28,30 @@ describe Field do
 
   it { should be_valid }
 
+  describe 'associated fieldslots' do
+    before { 2.times { FactoryGirl.create(:fieldslot, field: field) } }
+    it "should be destroyed when field is destroyed" do
+      fieldslots = field.fieldslots.dup
+      field.destroy
+      fieldslots.should_not be_empty
+      fieldslots.each do |fieldslot|
+        Fieldslot.find_by_id(fieldslot.id).should be_nil
+      end
+    end
+  end
+
+  describe 'availabilities that associate with only one field' do
+    let(:availability) { FactoryGirl.create(:availability) }
+    before { availability.fields = [field] }
+    
+    it "should be destroyed when field is destroyed" do
+      availability.fields.count.should == 1
+      availabilities = field.availabilities.dup
+      field.destroy
+      availabilities.should_not be_empty
+      availabilities.each do |a|
+        Availability.find_by_id(a.id).should be_nil
+      end
+    end
+  end
 end

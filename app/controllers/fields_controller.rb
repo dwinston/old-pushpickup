@@ -3,14 +3,10 @@ class FieldsController < ApplicationController
   before_filter :admin_player, except: :index  
 
   def index
-    if params[:city_id].present?
-      @fields = params[:city_id].flat_map { |id| City.find_by_id(id).fields }
-      @cities = params[:city_id]
-      store_location
-    else
-      @fields = []
-      @cities = []
-    end
+    params[:city_id] ||= [City.first.id]
+    @fields = params[:city_id].flat_map { |id| City.find_by_id(id).fields }
+    @cities = params[:city_id]
+    store_location
   end
 
   def new

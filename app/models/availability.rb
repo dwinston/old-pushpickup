@@ -14,8 +14,9 @@ include ActionView::Helpers::DateHelper
 
 class Availability < ActiveRecord::Base
   attr_accessible :start_time, :duration, :field_ids
+  attr_accessor :adding_fields
   belongs_to :player
-  has_many :fieldslots
+  has_many :fieldslots, dependent: :destroy
   has_many :fields, through: :fieldslots
 
   valid_times = 
@@ -28,12 +29,12 @@ class Availability < ActiveRecord::Base
     end.take_while { |dt| dt < 2.weeks.from_now }
 
   validates :start_time, inclusion: { in: valid_times, 
-    message: 'must be between now and two weeks from now, and one of 
-    {0, 15, 30, 45} minutes after the hour'}
+    message: 'must be between now and two weeks from now and be 
+    0, 15, 30, or 45 minutes after the hour'}
   validates :duration, numericality: { only_integer: true, 
-    less_than: 24 * 60, message: 'must be under one day'}
+    less_than: 24 * 60, message: 'must be under 24 hours'}
   validates :player_id, presence: true
-  validate :at_least_one_field
+  validate :at_least_one_field, unless: :adding_fields
   default_scope order: 'availabilities.start_time ASC'
 
   def start_time_to_s

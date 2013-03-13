@@ -49,12 +49,45 @@ describe "Field Pages" do
       end
 
       it { should_not have_link 'Add field', href: new_field_path }
+
+      describe 'having entered a start time and duration' do
+        before do
+          visit root_path
+          fill_in 'Start time', with: 'tomorrow 3pm'
+          fill_in 'Duration', with: '2 hours'
+        end
+
+        describe 'and decided to add fields' do
+          before { click_button 'Add fields'}
+
+          describe 'without fields selected' do
+            
+            it 'should not create a new availability' do
+              expect { click_button 'Choose field(s)' }.to_not change(Availability, :count).by(1)
+            end
+          end
+
+          describe 'with fields selected' do
+            before do
+              select city.name, from: :city_id
+              click_button 'Find'
+            end
+
+            it 'should create a new availability' do
+              expect do
+                check field.name
+                click_button 'Choose field(s)'
+              end.to change(Availability, :count).by(1)
+            end
+          end
+        end
+      end
     end
       
 
     it { should have_selector 'title', text: 'Find fields' }
     it { should have_link 'Add field', href: new_field_path }
-    it { should_not have_content field.name }
+    it { should have_content field.name }
 
     describe 'after a search' do
       before do

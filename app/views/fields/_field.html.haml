@@ -1,5 +1,7 @@
 %li
-  %strong= field.name
+  %span
+    = check_box_tag "availability[field_ids][]", field.id, false, id: dom_id(field)
+    = label_tag dom_id(field), field.name
   .address
     = "#{field.street_address}, #{field.city.name} #{field.zip_code}"
     |

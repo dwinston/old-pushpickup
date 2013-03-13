@@ -17,9 +17,19 @@ class Field < ActiveRecord::Base
   belongs_to :city
   has_many :fieldslots
   has_many :availabilities, through: :fieldslots
+  before_destroy :destroy_orphaned_availabilties_and_all_fieldslots
 
   validates :name, presence: true
   validates :zip_code, presence: true
-  validates :street_address, presence: true
+  validates :street_address, presence: true  
+
+  private
+
+    def destroy_orphaned_availabilties_and_all_fieldslots
+      self.availabilities.each do |availability|
+        availability.destroy if (availability.fields.count == 1) && availability.fields.include?(self)
+      end
+      self.fieldslots.destroy_all
+    end
   
 end

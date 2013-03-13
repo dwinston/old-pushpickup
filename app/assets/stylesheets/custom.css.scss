@@ -177,6 +177,16 @@ input {
   @extend .error;
 }
 
+.field_options {
+  div label {
+    display: inline;
+  }
+}
+
+.new_availability .btn {
+  margin-top: 10px;
+}
+
 /* players index */
 
 .players {
@@ -240,5 +250,10 @@ aside {
     &:last-child {
       border-bottom: 1px solid $grayLighter;
     }
+    label {
+      font-weight: bold;
+      display: inline;
+    }
   }
 }
+

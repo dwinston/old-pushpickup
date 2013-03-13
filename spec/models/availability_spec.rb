@@ -59,4 +59,16 @@ describe Availability do
     before { availability.fields = [] }
     it { should_not be_valid }
   end
+
+  describe 'associated fieldslots' do
+    before { 2.times { FactoryGirl.create(:fieldslot, availability: availability) } }
+    it "should be destroyed when availability is destroyed" do
+      fieldslots = availability.fieldslots.dup
+      availability.destroy
+      fieldslots.should_not be_empty
+      fieldslots.each do |fieldslot|
+        Fieldslot.find_by_id(fieldslot.id).should be_nil
+      end
+    end
+  end
 end
