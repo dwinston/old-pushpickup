@@ -17,6 +17,7 @@ class Player < ActiveRecord::Base
   has_secure_password
   has_many :availabilities, dependent: :destroy
   has_many :fields, through: :availabilities
+  has_and_belongs_to_many :games
   
   before_save { email.downcase! }
   before_save :create_remember_token
@@ -27,8 +28,12 @@ class Player < ActiveRecord::Base
   validates :password, length: { minimum: 6 }
   validates :password_confirmation, presence: true
 
-  def feed
+  def availability_feed
     Availability.where("player_id = ? AND start_time > ?", id, DateTime.now)
+  end
+  
+  def game_feed
+    games.where("start_time > ?", DateTime.now) 
   end
   
   private

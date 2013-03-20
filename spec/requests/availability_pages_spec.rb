@@ -5,11 +5,10 @@ describe "AvailabilityPages" do
 
   let(:player) { FactoryGirl.create(:player) }
   let(:field) {  FactoryGirl.create(:field) }
-  let(:availability) { FactoryGirl.create(:availability, player: player) }
-  before do 
-    availability.fields = [field]
-    sign_in player 
-  end
+  let(:soon) { DateTime.now.advance(hours: 3).beginning_of_hour }
+  let!(:availability) { FactoryGirl.create(:availability, player: player, 
+                                          start_time: soon, fields: [field]) }
+  before { sign_in player }
 
   describe 'availability creation' do
     before { visit root_path }
@@ -37,6 +36,19 @@ describe "AvailabilityPages" do
         expect { click_button 'Post' }.to change(Availability, :count).by(1)
       end
     end
+
+    describe 'with enough other players available for a game' do
+      let(:later) { soon.advance(days: 1) } 
+
+      before do
+        13.times { FactoryGirl.create(:availability, start_time: later, fields: [field]) }
+        # :availability factory creates fields after :create but not after :build, necessitating
+        # the passing of fields as a separate argument to submit_availability
+        submit_availability FactoryGirl.build(:availability, start_time: later), [field]
+      end
+      it { should have_content "GAME ON at #{field.name}" }
+    end
+
   end
 
   describe 'availability destruction' do

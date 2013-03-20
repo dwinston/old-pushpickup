@@ -32,14 +32,16 @@ class AvailabilitiesController < ApplicationController
         session[:availability_params] = params[:availability]
         redirect_to fields_path
       else
-        @feed_items = []
+        @availability_feed_items = []
+        @game_feed_items = []
         render 'static_pages/home'
       end
     elsif @availability.save
       flash[:success] = 'Availability created!'
       redirect_to root_url
     else
-      @feed_items = []
+      @availability_feed_items = []
+      @game_feed_items = []
       render 'static_pages/home'
     end
   end

@@ -19,6 +19,16 @@ def fill_in_field_form(field)
   fill_in 'Notes', with: field.notes
 end
 
+def submit_availability(availability, fields)
+  visit root_path
+  fill_in 'Start time', with: availability.start_time.to_s
+  fill_in 'Duration', with: availability.duration.to_s
+  fields.each do |field| 
+    check field.name
+  end
+  click_button 'Post'
+end
+
 RSpec::Matchers.define :have_error_message do |message|
   match do |page|
     page.should have_selector 'div.alert.alert-error', text: message

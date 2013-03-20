@@ -41,6 +41,10 @@ describe "Field Pages" do
       visit fields_path
     end
 
+    it { should have_selector 'title', text: 'Find fields' }
+    it { should have_link 'Add field', href: new_field_path }
+    it { should have_content field.name }
+
     describe 'as non-admin' do
       let(:player) { FactoryGirl.create :player }
       before do
@@ -84,11 +88,6 @@ describe "Field Pages" do
       end
     end
       
-
-    it { should have_selector 'title', text: 'Find fields' }
-    it { should have_link 'Add field', href: new_field_path }
-    it { should have_content field.name }
-
     describe 'after a search' do
       before do
         select city.name, from: :city_id

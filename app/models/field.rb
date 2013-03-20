@@ -16,6 +16,7 @@ class Field < ActiveRecord::Base
   attr_accessible :name, :notes, :zip_code, :street_address, :city_id
   belongs_to :city
   has_many :fieldslots
+  has_many :games
   has_many :availabilities, through: :fieldslots
   before_destroy :destroy_orphaned_availabilties_and_all_fieldslots
 

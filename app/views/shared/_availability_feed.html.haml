@@ -1,0 +1,4 @@
+- if @availability_feed_items.any?
+  %ol.availabilities
+    = render partial: 'shared/availability_feed_item', collection: @availability_feed_items, as: :feed_item
+  = will_paginate @availability_feed_items

@@ -10,15 +10,6 @@ FactoryGirl.define do
     end
   end
 
-  factory :availability do
-    start_time { DateTime.now.advance(days: 5).beginning_of_hour }
-    duration 120
-    player
-    before(:create) do |availability|
-      availability.fields << FactoryGirl.build(:field)
-    end
-  end
-
   factory :city do
     name Faker::Address.city + ', ' +  Faker::Address.state_abbr
   end
@@ -31,6 +22,20 @@ FactoryGirl.define do
     city
   end
 
+  factory :availability do
+    start_time { DateTime.now.advance(days: 5).beginning_of_hour }
+    duration 120
+    player
+
+    ignore do
+      fields FactoryGirl.create_list(:field, 1)
+    end
+
+    before(:create) do |availability, evaluator|
+      availability.fields = evaluator.fields
+    end
+  end
+
   factory :fieldslot do
     availability
     field
@@ -38,6 +43,20 @@ FactoryGirl.define do
     factory :closed_fieldslot do
       open false
       why_not_open 'Zombie apocalypse'
+    end
+  end
+
+  factory :game do
+    start_time { DateTime.now.advance(days: 5).beginning_of_hour }
+    duration 120
+    field
+
+    ignore do
+      players { FactoryGirl.create_list(:player, 14) }
+    end
+
+    before(:create) do |game, evaluator|
+      game.players = evaluator.players
     end
   end
 end

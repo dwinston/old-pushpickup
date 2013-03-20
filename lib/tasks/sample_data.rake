@@ -1,13 +1,15 @@
 namespace :db do
   desc 'Fill database with sample data'
   task populate: :environment do
+    # make an admin player
     admin = Player.create!(name: 'Donny Winston',
                            email: 'dwinston@alum.mit.edu',
                            password: 'foobar',
                            password_confirmation: 'foobar')
     admin.toggle!(:admin)
 
-    10.times do |n|
+    # make players
+    20.times do |n|
       name = Faker::Name.name
       email = "example-#{n+1}@railstutorial.org"
       password = 'password'
@@ -17,12 +19,12 @@ namespace :db do
                      password_confirmation: password)
     end
 
+    # make cities and fields
     5.times do
       city = Faker::Address.city
       state_abbr = Faker::Address.state_abbr 
       City.create!(name: "#{city}, #{state_abbr}")
     end
-
     cities = City.all(limit: 5)
     5.times do
       cities.each do |city|
@@ -35,13 +37,23 @@ namespace :db do
       end
     end
 
-    players = Player.all(limit: 6)
+    # make availabilities
     10.times do
       start_time = rand(13.days).since(2.hours.from_now).beginning_of_hour
       duration = [45, 60, 75, 90, 105, 120].sample
-      players.each do |player| 
+      Player.all(limit: 6).each do |player| 
         availability = player.availabilities.build(start_time: start_time, duration: duration)
         availability.fields << Field.all.sample
+        availability.save!
+      end
+      
+      # ensure some games
+      start_time = rand(13.days).since(2.hours.from_now).beginning_of_hour
+      duration = [45, 60, 75, 90, 105, 120].sample
+      field = Field.all.sample
+      Player.all.each do |player|
+        availability = player.availabilities.build(start_time: start_time, duration: duration)
+        availability.fields << field
         availability.save!
       end
     end

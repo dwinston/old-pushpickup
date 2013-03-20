@@ -17,20 +17,39 @@ describe "StaticPages" do
 
     describe 'for signed-in players' do
       let(:player) { FactoryGirl.create(:player) }
+      let(:field) { FactoryGirl.create(:field) }
       let(:soonest) { DateTime.now.advance(hours: 1).beginning_of_hour }
       before do
         FactoryGirl.create(:availability, player: player, 
-                           start_time: soonest)
+                           start_time: soonest, fields: [field])
         FactoryGirl.create(:availability, player: player, 
                            start_time: soonest.advance(days: 1))
         sign_in player
         visit root_path
       end
 
-      it "should render the player's feed" do
-        player.feed.each do |item|
-          page.should have_selector "li##{item.id}", text: item.start_time_to_s
+      it "should render the player's availability feed" do
+        player.availability_feed.each do |item|
+          page.should have_selector "li#availability_#{item.id}", text: item.start_time_to_s
         end
+      end
+
+      it "should render the player's games feed" do
+        player.game_feed.each do |item|
+          page.should have_selector "li#game_#{item.id}", text: start_time_to_s(item.start_time)
+        end
+      end
+
+      describe "with an upcoming game" do
+        before do
+          13.times { FactoryGirl.create(:availability, start_time: soonest, fields: [field]) }
+          visit root_path
+        end
+
+        it "game should be created" do
+          field.games.count.should == 1
+        end
+        it { should have_content "GAME ON at #{field.name}" }
       end
     end
   end 

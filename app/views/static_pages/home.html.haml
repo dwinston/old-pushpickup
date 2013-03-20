@@ -3,9 +3,12 @@
     %aside.span4
       %section= render 'shared/player_info'
       %section= render 'shared/availability_form'
-    .span8
+    .span4
       %h3 Availabilities
-      = render 'shared/feed'
+      = render 'shared/availability_feed'
+    .span4
+      %h3 Games
+      = render 'shared/game_feed'
 - else
   .center.hero-unit
     %h1 Push Pickup

@@ -1,11 +1,12 @@
+%h4 Add an availability
 = form_for(@availability) do |f|
   = render 'shared/error_messages', object: f.object
 
   = f.label :start_time
-  .field= f.text_field :start_time, placeholder: 'tuesday 5pm'
+  .input-large.field= f.text_field :start_time, placeholder: 'tuesday 5pm'
 
   = f.label :duration 
-  .field= f.text_field :duration, placeholder: '2 hours'
+  .input-small.field= f.text_field :duration, placeholder: '2 hours'
 
   .field.field_options
     = hidden_field_tag "availability[field_ids][]", nil
@@ -15,5 +16,5 @@
                       @availability.field_ids.include?(field.id), id: dom_id(field)
         = label_tag dom_id(field), field.name
 
-  .field= f.submit 'Add fields', name: 'add_fields', class: 'btn btn-success'
+  .field= f.submit 'Add fields', name: 'add_fields', class: 'btn btn-info'
   .field= f.submit 'Post', class: ('btn btn-large ' + (current_player.fields.blank? ? 'btn-danger' : 'btn-primary'))

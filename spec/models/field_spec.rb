@@ -16,6 +16,7 @@ require 'spec_helper'
 
 describe Field do
 
+  let(:start_time) { DateTime.now.advance(days: 5).beginning_of_hour }
   let(:field) { FactoryGirl.create(:field) }
 
   subject { field }
@@ -25,11 +26,15 @@ describe Field do
   it { should respond_to :city }
   it { should respond_to :zip_code }
   it { should respond_to :notes }
+  it { should respond_to :games }
 
   it { should be_valid }
 
   describe 'associated fieldslots' do
-    before { 2.times { FactoryGirl.create(:fieldslot, field: field) } }
+    before do
+      2.times { FactoryGirl.create(:fieldslot, field: field) }
+    end
+
     it "should be destroyed when field is destroyed" do
       fieldslots = field.fieldslots.dup
       field.destroy
@@ -51,6 +56,52 @@ describe Field do
       availabilities.should_not be_empty
       availabilities.each do |a|
         Availability.find_by_id(a.id).should be_nil
+      end
+    end
+  end
+
+  describe 'with 13 overlapping availabilities' do
+    before do
+      13.times do 
+        FactoryGirl.create(:availability, start_time: start_time, duration: 120, fields: [field])
+      end
+    end
+
+    describe 'adding a 14th availability to the field' do
+      let(:player) { FactoryGirl.create(:player) }
+
+      describe 'that overlaps fully' do
+        before { FactoryGirl.create(:availability, player: player,
+                                    start_time: start_time, duration: 120, fields: [field]) }
+        its("availabilities.count") { should == 14}
+        its("games.count") { should == 1 }
+        its("games.first.duration") { should == 120 }
+
+        context 'with a game on' do
+          it 'one more availability does not create a new game' do
+            expect { FactoryGirl.create(:availability, start_time: start_time, duration: 120, fields: [field]) }.
+              not_to change(Game, :count)
+          end
+          it 'one more availability results in its player joining the game' do
+            expect { FactoryGirl.create(:availability, start_time: start_time, duration: 120, fields: [field]) }.
+              to change(field.games.first.players, :count).by(1)
+          end
+        end
+      end
+
+      describe 'that partially overlaps' do
+        before { FactoryGirl.create(:availability, player: player,
+                                    start_time: start_time.advance(minutes: 60), duration: 120, fields: [field]) }
+        its("availabilities.count") { should == 14}
+        its("games.count") { should == 1 }
+        its("games.first.duration") { should == 60 }
+      end
+
+      describe 'that does not overlap (sufficiently)' do
+        before { FactoryGirl.create(:availability, player: player,
+                                    start_time: start_time.advance(minutes: 90), duration: 120, fields: [field]) }
+        its("availabilities.count") { should == 14}
+        its("games.count") { should == 0 }
       end
     end
   end
