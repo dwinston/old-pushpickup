@@ -24,6 +24,12 @@ class Player < ActiveRecord::Base
   need :min_players_in_game, 14 
   need :min_duration_of_game, 45 # minutes
   need :days_separating_games, 2
+  # Explicitly reference needs to persist them to db
+  after_create do
+    min_players_in_game
+    min_duration_of_game
+    days_separating_games
+  end
 
   before_save { email.downcase! }
   before_save :create_remember_token
