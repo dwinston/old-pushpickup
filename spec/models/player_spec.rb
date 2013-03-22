@@ -207,20 +207,24 @@ describe Player do
                                           fields: [field]) }
         end
         
-        it 'adding another availability that overlaps with all should create two games' do
-          expect do
-            FactoryGirl.create(:availability, start_time: start_time, duration: 120, player: player, fields: [field]) 
-          end.to change(Game, :count).by(2)
+        describe "if the player is okay with two games on the same day" do
+          before do
+            player.days_separating_games = 0
+          end
+        
+          it 'adding another availability that overlaps with all should create two games' do
+            expect do
+              FactoryGirl.create(:availability, start_time: start_time, duration: 120, player: player, fields: [field]) 
+            end.to change(Game, :count).by(2)
+          end
         end
 
         describe "if the player's needs include at most one game per day" do
           before do
-            games_per_day = player.needs.find_or_initialize_by(name: 'games_per_day') { |n| n.value = 1 }
-            games_per_day.value = 1
-            games_per_day.save!
+            player.days_separating_games = 1
           end
 
-          it 'adding another availability that overlaps with all should not create two games' do
+          it 'adding another availability that overlaps with all should create only one game' do
             expect do
               FactoryGirl.create(:availability, start_time: start_time, duration: 120, player: player, fields: [field]) 
             end.to change(Game, :count).by(1)
@@ -228,6 +232,5 @@ describe Player do
         end
       end
     end
-
   end
 end

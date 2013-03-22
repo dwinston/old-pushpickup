@@ -18,7 +18,13 @@ class Player < ActiveRecord::Base
   has_many :availabilities, dependent: :destroy
   has_many :fields, through: :availabilities
   has_and_belongs_to_many :games
-  
+
+  include Needs
+
+  need :min_players_in_game, 14 
+  need :min_duration_of_game, 45 # minutes
+  need :days_separating_games, 2
+
   before_save { email.downcase! }
   before_save :create_remember_token
   validates :name, presence: true, length: { maximum: 50 }

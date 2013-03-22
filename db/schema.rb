@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130314212446) do
+ActiveRecord::Schema.define(:version => 20130321031230) do
 
   create_table "availabilities", :force => true do |t|
     t.datetime "start_time"
@@ -62,6 +62,16 @@ ActiveRecord::Schema.define(:version => 20130314212446) do
     t.integer "game_id"
     t.integer "player_id"
   end
+
+  create_table "needs", :force => true do |t|
+    t.string   "name"
+    t.integer  "player_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "value"
+  end
+
+  add_index "needs", ["player_id"], :name => "index_needs_on_player_id"
 
   create_table "players", :force => true do |t|
     t.string   "name"
