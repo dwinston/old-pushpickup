@@ -14,13 +14,14 @@ require 'spec_helper'
 
 describe Need do
 
-  let(:need) { FactoryGirl.create(:need) }
+  let(:player) { FactoryGirl.create(:player) }
 
-  subject { need }
+  subject { player.needs.sample }
 
   it { should respond_to :name }
   it { should respond_to :value }
   it { should respond_to :player }
+  its(:player) { should == player }
 
   it { should be_valid }
 end

@@ -59,10 +59,4 @@ FactoryGirl.define do
       game.players = evaluator.players
     end
   end
-
-  factory :need do
-    name :min_players_in_game
-    value 14
-    player
-  end
 end
