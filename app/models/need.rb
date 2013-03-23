@@ -25,7 +25,7 @@ class Need < ActiveRecord::Base
     [common[:min_duration], value].max
   end
 
-  def days_separating_games(value, common)
+  def min_days_separating_games(value, common)
     other_game_day = common[:timeslot][:start_time].to_date
     self.player.games.all? do |game|
       my_game_day = game.start_time.to_date

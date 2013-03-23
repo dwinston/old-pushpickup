@@ -14,6 +14,10 @@ module Needs
     end
   end
 
+  def registered_need_names
+    @@needs.keys
+  end
+
   # Persists current default value of need to db for self so that self is not
   # caught off guard by changes to defaults
   def get_need(name)
