@@ -45,18 +45,4 @@ FactoryGirl.define do
       why_not_open 'Zombie apocalypse'
     end
   end
-
-  factory :game do
-    start_time { DateTime.now.advance(days: 5).beginning_of_hour }
-    duration 120
-    field
-
-    ignore do
-      players { FactoryGirl.create_list(:player, 14) }
-    end
-
-    before(:create) do |game, evaluator|
-      game.players = evaluator.players
-    end
-  end
 end
