@@ -13,13 +13,15 @@
 #
 
 class Player < ActiveRecord::Base
-  attr_accessible :email, :name, :password, :password_confirmation
+  attr_accessible :email, :name, :password, :password_confirmation, :needs_attributes
   has_secure_password
   has_many :availabilities, dependent: :destroy
   has_many :fields, through: :availabilities
   has_and_belongs_to_many :games
 
+  has_many :needs
   include Needs
+  accepts_nested_attributes_for :needs
 
   need :min_players_in_game, 14 
   need :min_duration_of_game, 45 # minutes

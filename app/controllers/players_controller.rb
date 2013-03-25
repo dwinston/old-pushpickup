@@ -24,6 +24,7 @@ class PlayersController < ApplicationController
   end
 
   def edit
+    @needs = @player.needs
   end
 
   def update

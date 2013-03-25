@@ -1,8 +1,9 @@
+# inspired by http://joshsymonds.com/blog/2012/05/16/quick-and-easy-user-preferences-in-rails/
+
 module Needs
   extend ActiveSupport::Concern
 
   included do
-    has_many :needs
     @@needs = {}
   end
 

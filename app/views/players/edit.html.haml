@@ -6,6 +6,13 @@
     = form_for(@player) do |f|
       = render 'fields', f: f
       = f.submit 'Save changes', class: 'btn btn-large btn-primary'
+
+      - @player.needs.each do |need|
+        = f.fields_for :needs, need do |need_fields|
+          .field
+            = need_fields.label :value, need.pretty_name
+            .input-mini= need_fields.number_field :value
+
     = gravatar_for @player
     = link_to 'change', 'http://gravatar.com/emails', target: "_blank"
 
