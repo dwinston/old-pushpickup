@@ -37,11 +37,13 @@ namespace :db do
       end
     end
 
+   some_players = Player.all(limit: 18)
+
     # make availabilities
     10.times do
       start_time = rand(13.days).since(2.hours.from_now).beginning_of_hour
       duration = [45, 60, 75, 90, 105, 120].sample
-      Player.all(limit: 6).each do |player| 
+      some_players.each do |player| 
         availability = player.availabilities.build(start_time: start_time, duration: duration)
         availability.fields << Field.all.sample
         availability.save!
@@ -51,7 +53,7 @@ namespace :db do
       start_time = rand(13.days).since(2.hours.from_now).beginning_of_hour
       duration = [45, 60, 75, 90, 105, 120].sample
       field = Field.all.sample
-      Player.all.each do |player|
+      some_players.each do |player|
         availability = player.availabilities.build(start_time: start_time, duration: duration)
         availability.fields << field
         availability.save!

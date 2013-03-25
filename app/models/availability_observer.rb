@@ -106,7 +106,7 @@ class AvailabilityObserver < ActiveRecord::Observer
         common = {timeslot: game_timeslot, min_players: game.players.count, min_duration: game.duration, field: field} 
         (game.duration >= my_min_duration) && 
           (game.players.count >= my_min_players - 1) &&
-          timeslot_intersection({start_time: my_start_time, end_time: my_end_time}, game_timeslot, min_overlap: my_min_duration) &&
+          timeslot_intersection({start_time: my_start_time, end_time: my_end_time}, game_timeslot, min_overlap: game.duration) &&
           satisfies_player_needs(availability.player, common) && 
           !conflicting_game(availability, common) && 
           game.players << availability.player

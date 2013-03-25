@@ -1,7 +1,5 @@
 # == Schema Information
 #
-# Table name: games
-#
 #  id         :integer          not null, primary key
 #  start_time :datetime
 #  duration   :integer
@@ -14,10 +12,13 @@ require 'spec_helper'
 
 describe Game do
 
-  let(:game) { FactoryGirl.create(:game) }
-  let(:player) { FactoryGirl.create(:player) }
   let(:field) { FactoryGirl.create(:field) }
   let(:soon) { DateTime.now.advance(hours: 3).beginning_of_hour }
+  let(:duration) { 90 }
+  let(:game) do
+    14.times { FactoryGirl.create(:availability, start_time: soon, duration: duration, fields: [field]) }
+    Game.first
+  end
 
   subject { game }
 
@@ -28,22 +29,25 @@ describe Game do
 
   it { should be_valid }
 
-  describe 'player availabilities create a game' do
-    before do
-      13.times { FactoryGirl.create(:availability, start_time: soon, fields: [field]) }
-      FactoryGirl.create(:availability, player: player, start_time: soon, fields: [field])
+  context 'when a game is on' do
+
+    it 'then a new game is not created when only one additional player adds an overlapping availability' do
+      expect { FactoryGirl.create(:availability, start_time: soon, duration: duration, fields: [field]) }.not_to change(Game, :count)
     end
 
-    it 'but a new game should not be created when only one additional player adds an overlapping availability' do
-      expect { FactoryGirl.create(:availability, start_time: soon, fields: [field]) }.not_to change(Game, :count)
-    end
-
-    subject { player.games.first }
-
-    describe "a player has an availability that overlaps with the game" do
-      before { FactoryGirl.create(:availability, start_time: soon, fields: [field]) }
+    describe "and a new availability encompasses the game" do
+      before { FactoryGirl.create(:availability, start_time: soon, duration: duration, fields: [field]) }
         
       its('players.count') { should == 15 }
+    end
+
+    describe "and new availabilities overlap but do not encompass the game" do
+      before do
+        FactoryGirl.create(:availability, start_time: soon, duration: game.duration - 15, fields: [field])
+        FactoryGirl.create(:availability, start_time: soon.advance(minutes: 15), duration: game.duration, fields: [field])
+      end
+        
+      its('players.count') { should == 14 }
     end
   end
 end
