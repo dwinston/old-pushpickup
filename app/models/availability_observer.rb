@@ -62,9 +62,10 @@ class AvailabilityObserver < ActiveRecord::Observer
   def make_game(compatibles, candidates, common)
     # below test is for equality because game creation is sought after every single save of an Availability
     if compatibles.count == common[:min_players] 
+      # possible duration is ((common[:timeslot][:end_time] - common[:timeslot][:start_time]) / 60).round
       common[:field].games.create!(
         start_time: common[:timeslot][:start_time],
-        duration: ((common[:timeslot][:end_time] - common[:timeslot][:start_time]) / 60).round,
+        duration: common[:min_duration],
         player_ids: compatibles.map(&:player_id))
     elsif candidates.empty?
       false

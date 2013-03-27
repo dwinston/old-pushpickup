@@ -5,4 +5,7 @@
     %strong GAME ON 
     at #{feed_item.field.name}
   %span.start_time= start_time_to_s(feed_item.start_time)
-  %span.duration for #{duration_to_s(feed_item.start_time, feed_item.duration)}
+  %span.duration
+    for
+    at least 
+    = duration_to_s(feed_item.start_time, feed_item.duration)

@@ -14,7 +14,9 @@ describe Game do
 
   let(:field) { FactoryGirl.create(:field) }
   let(:soon) { DateTime.now.advance(hours: 3).beginning_of_hour }
-  let(:duration) { 90 }
+  let(:player) { FactoryGirl.create(:player) }
+  let(:default_min_duration_of_game) { player.min_duration_of_game.value }
+  let(:duration) { 120 }
   let(:game) do
     14.times { FactoryGirl.create(:availability, start_time: soon, duration: duration, fields: [field]) }
     Game.first
@@ -28,6 +30,8 @@ describe Game do
   it { should respond_to :players }
 
   it { should be_valid }
+
+  its(:duration) { should == default_min_duration_of_game }
 
   context 'when a game is on' do
 

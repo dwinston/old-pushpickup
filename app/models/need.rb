@@ -18,11 +18,11 @@ class Need < ActiveRecord::Base
   validates_uniqueness_of :name, scope: :player_id
 
   def min_players_in_game(value, common)
-    [common[:min_players], value].max
+    value
   end
 
   def min_duration_of_game(value, common)
-    [common[:min_duration], value].max
+    value
   end
 
   def min_days_separating_games(value, common)
