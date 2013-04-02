@@ -1,0 +1,7 @@
+%p
+  = succeed ',' do
+    = @player.name
+
+%p Thank you for signing up.
+
+%p= link_to "Your profile", edit_player_url(@player)

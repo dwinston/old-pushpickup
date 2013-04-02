@@ -15,6 +15,7 @@ class PlayersController < ApplicationController
   def create
     @player = Player.new(params[:player])
     if @player.save
+      PlayerMailer.signup_confirmation(@player).deliver
       sign_in @player
       flash[:success] = 'Welcome to Push Pickup!'
       redirect_to root_url
