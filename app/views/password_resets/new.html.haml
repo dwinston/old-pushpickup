@@ -1,0 +1,10 @@
+= provide :title, 'Forgot password?'
+%h1 Forgot password?
+
+.row
+  .span6.offset3
+    = form_tag password_resets_path, method: :post do
+      .field
+        = label_tag :email
+        = text_field_tag :email, params[:email]
+      = submit_tag "Reset Password", class: 'btn btn-large btn-primary'

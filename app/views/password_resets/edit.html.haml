@@ -1,0 +1,14 @@
+= provide :title, 'Reset Password'
+%h1 Reset Password
+
+.row
+  .span6.offset3
+    = form_for @player, url: password_reset_path(params[:id]) do |f|
+      = render 'shared/error_messages', object: f.object
+      .field
+        = f.label :password
+        = f.password_field :password
+      .field
+        = f.label :password_confirmation, 'Confirm password'
+        = f.password_field :password_confirmation
+      = f.submit 'Update password', class: 'btn btn-large btn-primary'

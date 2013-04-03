@@ -75,7 +75,7 @@ describe Field do
                                     start_time: start_time, duration: 120, fields: [field]) }
         its("availabilities.count") { should == 14}
         its("games.count") { should == 1 }
-        its("games.first.duration") { should == 120 }
+        its("games.first.duration") { should == player.min_duration_of_game.value }
 
         context 'with a game on' do
           it 'one more availability does not create a new game' do
@@ -94,7 +94,7 @@ describe Field do
                                     start_time: start_time.advance(minutes: 60), duration: 120, fields: [field]) }
         its("availabilities.count") { should == 14}
         its("games.count") { should == 1 }
-        its("games.first.duration") { should == 60 }
+        its("games.first.duration") { should == player.min_duration_of_game.value }
       end
 
       describe 'that does not overlap (sufficiently)' do

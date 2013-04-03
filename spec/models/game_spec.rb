@@ -1,5 +1,7 @@
 # == Schema Information
 #
+# Table name: games
+#
 #  id         :integer          not null, primary key
 #  start_time :datetime
 #  duration   :integer

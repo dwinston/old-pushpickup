@@ -2,14 +2,16 @@
 #
 # Table name: players
 #
-#  id              :integer          not null, primary key
-#  name            :string(255)
-#  email           :string(255)
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  password_digest :string(255)
-#  remember_token  :string(255)
-#  admin           :boolean          default(FALSE)
+#  id                     :integer          not null, primary key
+#  name                   :string(255)
+#  email                  :string(255)
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  password_digest        :string(255)
+#  remember_token         :string(255)
+#  admin                  :boolean          default(FALSE)
+#  password_reset_token   :string(255)
+#  password_reset_sent_at :datetime
 #
 
 require 'spec_helper'
@@ -231,6 +233,25 @@ describe Player do
           end
         end
       end
+    end
+  end
+
+  describe "#send_password_reset" do
+    it "generates a unique password_reset token each time" do
+      player.send_password_reset
+      last_token = player.password_reset_token
+      player.send_password_reset
+      player.password_reset_token.should_not eq(last_token)
+    end
+
+    it "saves the time the password reset was sent" do
+      player.send_password_reset
+      player.reload.password_reset_sent_at.should be_present
+    end
+
+    it "delivers email to player" do
+      player.send_password_reset
+      last_email.to.should include(player.email)
     end
   end
 end

@@ -1,18 +1,15 @@
 require "spec_helper"
 
 describe PlayerMailer do
-  describe "signup_confirmation" do
-    let(:mail) { PlayerMailer.signup_confirmation }
+  describe "password_reset" do
+    let(:player) { FactoryGirl.create(:player, password_reset_token: "anything") }
+    let(:mail) { PlayerMailer.password_reset(player) }
 
-    it "renders the headers" do
-      mail.subject.should eq("Signup confirmation")
-      mail.to.should eq(["to@example.org"])
-      mail.from.should eq(["from@example.com"])
-    end
-
-    it "renders the body" do
-      mail.body.encoded.should match("Hi")
+    it "sends player password reset url" do
+      mail.subject.should include("Password Reset")
+      mail.to.should eq([player.email])
+      mail.from.should eq(["dwinst@gmail.com"])
+      mail.body.encoded.should match(edit_password_reset_path(player.password_reset_token))
     end
   end
-
 end

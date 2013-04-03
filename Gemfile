@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '3.2.12'
 gem 'haml'
+gem 'haml-rails'
 gem 'bootstrap-sass', "~> 2.3.0.1" #'2.1'
 gem 'bcrypt-ruby', '3.0.1'
 gem 'faker', '1.0.1'
@@ -14,6 +15,8 @@ gem 'chronic_duration', '0.9.6'
 group :development, :test do
   gem 'sqlite3', '1.3.5'
   gem 'rspec-rails', '2.11.0'
+  gem 'guard-rspec'
+  gem 'guard-livereload'
 end
 
 group :development do
@@ -33,6 +36,8 @@ gem 'jquery-rails', '2.0.2'
 group :test do
   gem 'capybara', '1.1.2'
   gem 'factory_girl_rails', '4.1.0'
+  gem 'rb-inotify', '~> 0.9'
+  gem 'libnotify'
 end
 
 group :production do

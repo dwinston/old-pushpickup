@@ -1,11 +1,10 @@
 PushPickup::Application.routes.draw do
-  get "fields/new"
-
   resources :players
   resources :sessions, only: [:new, :create, :destroy]
   resources :availabilities, only: [:create, :destroy]
   resources :fields
   resources :cities, only: [:index, :new, :create, :destroy]
+  resources :password_resets
 
   root to: 'static_pages#home'
   

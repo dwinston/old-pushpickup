@@ -27,7 +27,7 @@ class Need < ActiveRecord::Base
 
   def min_days_separating_games(value, common)
     other_game_day = common[:timeslot][:start_time].to_date
-    self.player.games.all? do |game|
+    player.games.all? do |game|
       my_game_day = game.start_time.to_date
       (my_game_day + value <= other_game_day) || (my_game_day - value >= other_game_day)
     end

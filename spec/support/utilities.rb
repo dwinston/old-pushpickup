@@ -34,3 +34,11 @@ RSpec::Matchers.define :have_error_message do |message|
     page.should have_selector 'div.alert.alert-error', text: message
   end
 end
+
+def last_email
+  ActionMailer::Base.deliveries.last
+end
+
+def reset_email
+  ActionMailer::Base.deliveries = []
+end
