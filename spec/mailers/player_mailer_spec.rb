@@ -24,4 +24,22 @@ describe PlayerMailer do
       mail.body.encoded.should match(signup_confirmation_path(player.remember_token))
     end
   end
+
+  describe "game_notification" do
+    let(:player_emails) { FactoryGirl.create_list(:player, 14).map(&:email) }
+    let(:field) { FactoryGirl.create(:field) }
+    let(:start_time) { Time.zone.now.beginning_of_hour + 3.hours }
+    let(:duration) { 90 }
+    let(:mail) { PlayerMailer.game_notification(player_emails, field, start_time, duration) }
+
+    it "sends players game notification that includes field name, start time, and duration" do
+      mail.subject.should include("Game On!")
+      mail.bcc.should include(*player_emails)
+      mail.body.should include(field.name, 
+                               start_time.to_s(:weekday_and_ordinal),
+                               distance_of_time_in_words(start_time, start_time + duration.minutes))
+      mail.from.should eq(["dwinst@gmail.com"])
+      #mail.body.encoded.should match(field_path(field))
+    end
+  end
 end

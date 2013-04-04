@@ -1,0 +1,12 @@
+%p 
+  Thanks to you, a game is now on at
+  = @field.name
+  on
+  = @start_time.to_s(:weekday_and_ordinal)
+  for at least
+  = succeed '.' do
+    = distance_of_time_in_words(@start_time, @start_time + @duration.minutes)
+  Woohoo!
+
+%p= link_to "Push Pickup", root_url
+

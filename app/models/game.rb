@@ -16,4 +16,8 @@ class Game < ActiveRecord::Base
   has_and_belongs_to_many :players
 
   default_scope order: 'games.start_time ASC'
+
+  after_create do
+    PlayerMailer.game_notification(players.pluck(:email), field, start_time, duration).deliver
+  end
 end

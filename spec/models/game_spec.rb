@@ -15,7 +15,7 @@ require 'spec_helper'
 describe Game do
 
   let(:field) { FactoryGirl.create(:field) }
-  let(:soon) { DateTime.now.advance(hours: 3).beginning_of_hour }
+  let(:soon) { Time.zone.now.beginning_of_hour + 3.hours }
   let(:player) { FactoryGirl.create(:player) }
   let(:default_min_duration_of_game) { player.min_duration_of_game.value }
   let(:duration) { 120 }
@@ -50,10 +50,24 @@ describe Game do
     describe "and new availabilities overlap but do not encompass the game" do
       before do
         FactoryGirl.create(:availability, start_time: soon, duration: game.duration - 15, fields: [field])
-        FactoryGirl.create(:availability, start_time: soon.advance(minutes: 15), duration: game.duration, fields: [field])
+        FactoryGirl.create(:availability, start_time: soon + 15.minutes, duration: game.duration, fields: [field])
       end
         
       its('players.count') { should == 14 }
     end
+  end
+
+  describe "emailing players upon creation of their game" do
+    let(:players) { FactoryGirl.create_list(:player, 14) }
+    before do
+      players.each do |player|
+        FactoryGirl.create(:availability, player: player, start_time: soon + 1.day, duration: duration, fields: [field])
+      end
+    end
+
+    it "should email players of game" do
+      last_email.bcc.should include(*players.map(&:email))
+    end
+
   end
 end

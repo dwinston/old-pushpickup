@@ -10,7 +10,6 @@ module ApplicationHelper
   end
 
   def start_time_to_s(start_time)
-    Time.zone = 'America/Los_Angeles'
     start_time.in_time_zone.strftime("%A, %B #{start_time.day.ordinalize}, %I:%M%p")
   end
 

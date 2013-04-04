@@ -38,7 +38,6 @@ class Availability < ActiveRecord::Base
   default_scope order: 'availabilities.start_time ASC'
 
   def start_time_to_s
-    Time.zone = 'America/Los_Angeles'
     start_time.in_time_zone.strftime("%A, %B #{start_time.day.ordinalize}, %I:%M%p")
   end
 
