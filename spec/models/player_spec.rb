@@ -12,6 +12,7 @@
 #  admin                  :boolean          default(FALSE)
 #  password_reset_token   :string(255)
 #  password_reset_sent_at :datetime
+#  activated              :boolean          default(FALSE)
 #
 
 require 'spec_helper'

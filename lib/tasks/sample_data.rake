@@ -7,16 +7,18 @@ namespace :db do
                            password: 'foobar',
                            password_confirmation: 'foobar')
     admin.toggle!(:admin)
+    admin.toggle!(:activated)
 
     # make players
     20.times do |n|
       name = Faker::Name.name
       email = "example-#{n+1}@railstutorial.org"
       password = 'password'
-      Player.create!(name: name,
-                     email: email,
-                     password: password,
-                     password_confirmation: password)
+      player = Player.create!(name: name,
+                              email: email,
+                              password: password,
+                              password_confirmation: password)
+      player.toggle!(:activated)
     end
 
     # make cities and fields
