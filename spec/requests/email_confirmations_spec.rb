@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "SignupConfirmations" do
+describe "EmailConfirmations" do
   it "makes player activated when remember token matches" do
     player = FactoryGirl.create(:player, activated: false, activate_token: "something", activate_sent_at: 1.hour.ago)
     visit signup_confirmation_path(player.activate_token)

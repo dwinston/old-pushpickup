@@ -13,6 +13,8 @@
 #  password_reset_token   :string(255)
 #  password_reset_sent_at :datetime
 #  activated              :boolean          default(FALSE)
+#  activate_token         :string(255)
+#  activate_sent_at       :datetime
 #
 
 require 'spec_helper'

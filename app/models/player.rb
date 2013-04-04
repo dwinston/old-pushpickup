@@ -13,6 +13,8 @@
 #  password_reset_token   :string(255)
 #  password_reset_sent_at :datetime
 #  activated              :boolean          default(FALSE)
+#  activate_token         :string(255)
+#  activate_sent_at       :datetime
 #
 
 class Player < ActiveRecord::Base
@@ -48,8 +50,11 @@ class Player < ActiveRecord::Base
     PlayerMailer.password_reset(self).deliver
   end
 
-  def refresh_remember_token
-    generate_token(:remember_token) 
+  def send_signup_confirmation
+    generate_token(:activate_token) 
+    self.activate_sent_at = Time.zone.now
+    save!(validate: false)
+    PlayerMailer.signup_confirmation(self).deliver
   end
 
   def availability_feed

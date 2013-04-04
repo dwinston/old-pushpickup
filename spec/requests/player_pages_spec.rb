@@ -41,23 +41,10 @@ describe "Player pages" do
         let(:player) { Player.find_by_email('player@example.com') }
 
         it { should have_content "Email sent" }
-        it { should_not have_link 'Sign out' }
-        it "emails player to confirm email address" do
-          last_email.to.should include(player.email)
-        end
-
-        describe "should not be able to sign in yet" do
-          before { sign_in player }
-          
-          it { should_not have_link 'Sign out' }
-        end
-        
-        describe "after confirming player's email address" do
-          before { visit signup_confirmation_path(player.remember_token) }  
-          it { should have_content player.name }
-          it { should have_selector 'div.alert.alert-success', text: 'Welcome' }
-          it { should have_link 'Sign out' }
-        end
+        it { should have_content player.name }
+        it { should have_selector 'div.alert.alert-success', text: 'Welcome' }
+        it { should have_link 'Sign out' }
+        it { should_not be_activated }
       end
     end
   end

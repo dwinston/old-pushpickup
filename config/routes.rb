@@ -1,4 +1,6 @@
 PushPickup::Application.routes.draw do
+  get "email_confirmations/show"
+
   resources :players
   resources :sessions, only: [:new, :create, :destroy]
   resources :availabilities, only: [:create, :destroy]

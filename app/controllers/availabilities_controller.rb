@@ -38,6 +38,7 @@ class AvailabilitiesController < ApplicationController
       end
     elsif @availability.save
       flash[:success] = 'Availability created!'
+      flash[:alert] = "Reminder: You need to confirm your email address by clicking the link sent to you at #{current_player.email} before youravailabilities can help create games." unless current_player.activated? 
       redirect_to root_url
     else
       @availability_feed_items = []
