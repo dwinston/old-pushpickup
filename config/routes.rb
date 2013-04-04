@@ -5,6 +5,7 @@ PushPickup::Application.routes.draw do
   resources :fields
   resources :cities, only: [:index, :new, :create, :destroy]
   resources :password_resets
+  resources :signup_confirmations, only: :show
 
   root to: 'static_pages#home'
   

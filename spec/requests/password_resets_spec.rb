@@ -36,7 +36,7 @@ describe "PasswordResets" do
   end
 
   it "reports when password token has expired" do
-    player = FactoryGirl.create(:player, password_reset_token: "something", password_reset_sent_at: 5.hour.ago)
+    player = FactoryGirl.create(:player, password_reset_token: "something", password_reset_sent_at: 5.hours.ago)
     visit edit_password_reset_path(player.password_reset_token)
     fill_in "Password", with: "foobar"
     fill_in "Confirm password", with: "foobar"

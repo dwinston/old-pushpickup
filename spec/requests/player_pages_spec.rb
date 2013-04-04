@@ -31,16 +31,33 @@ describe "Player pages" do
         fill_in 'Confirm password', with: 'foobar'
       end
 
-      it 'should create a player' do
+      it 'should create player' do
         expect { click_button submit }.to change(Player, :count).by(1)
       end
 
-      describe 'after saving the user' do
+      describe 'after saving player' do
         before { click_button submit }
+
         let(:player) { Player.find_by_email('player@example.com') }
-        it { should have_content player.name }
-        it { should have_selector 'div.alert.alert-success', text: 'Welcome' }
-        it { should have_link 'Sign out' }
+
+        it { should have_content "Email sent" }
+        it { should_not have_link 'Sign out' }
+        it "emails player to confirm email address" do
+          last_email.to.should include(player.email)
+        end
+
+        describe "should not be able to sign in yet" do
+          before { sign_in player }
+          
+          it { should_not have_link 'Sign out' }
+        end
+        
+        describe "after confirming player's email address" do
+          before { visit signup_confirmation_path(player.remember_token) }  
+          it { should have_content player.name }
+          it { should have_selector 'div.alert.alert-success', text: 'Welcome' }
+          it { should have_link 'Sign out' }
+        end
       end
     end
   end
@@ -104,7 +121,7 @@ describe "Player pages" do
         fill_in 'Confirm password', with: player.password
         click_button 'Save changes'
       end
-
+      
       it { should have_content new_name }
       it { should have_selector 'div.alert.alert-success' }
       it { should have_link 'Sign out', href: signout_path }

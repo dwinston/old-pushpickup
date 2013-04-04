@@ -16,9 +16,8 @@ class PlayersController < ApplicationController
     @player = Player.new(params[:player])
     if @player.save
       PlayerMailer.signup_confirmation(@player).deliver
-      sign_in @player
-      flash[:success] = 'Welcome to Push Pickup!'
-      redirect_to root_url
+      flash[:success] = "Almost there! Email sent to #{@player.email}. Click the link in that email to confirm you own that email address."
+      redirect_to root_path 
     else
       render 'new'
     end

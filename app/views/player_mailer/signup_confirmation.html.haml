@@ -4,4 +4,8 @@
 
 %p Thank you for signing up.
 
-%p= link_to "Your profile", edit_player_url(@player)
+%p To confirm your account using this email address, click the link below:
+
+%p= link_to "Signup Confirmation", signup_confirmation_url(@player.remember_token)
+
+%p If you did not request an account using this email address, just ignore this email.

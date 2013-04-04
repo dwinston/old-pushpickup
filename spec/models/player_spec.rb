@@ -212,6 +212,7 @@ describe Player do
         describe "if the player is okay with two games on the same day" do
           before do
             player.min_days_separating_games = 0
+            player.save!
           end
         
           it 'adding another availability that overlaps with all should create two games' do
@@ -224,6 +225,7 @@ describe Player do
         describe "if the player's needs include at most one game per day" do
           before do
             player.min_days_separating_games = 1
+            player.save!
           end
 
           it 'adding another availability that overlaps with all should create only one game' do

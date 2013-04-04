@@ -4,7 +4,7 @@ class SessionsController < ApplicationController
 
   def create
     player = Player.find_by_email(params[:session][:email].downcase)
-    if player && player.authenticate(params[:session][:password])
+    if player && player.authenticate(params[:session][:password]) && player.activated?
       sign_in player
       redirect_back_or root_url
     else

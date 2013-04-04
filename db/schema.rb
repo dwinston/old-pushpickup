@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130403170226) do
+ActiveRecord::Schema.define(:version => 20130403230430) do
 
   create_table "availabilities", :force => true do |t|
     t.datetime "start_time"
@@ -83,6 +83,7 @@ ActiveRecord::Schema.define(:version => 20130403170226) do
     t.boolean  "admin",                  :default => false
     t.string   "password_reset_token"
     t.datetime "password_reset_sent_at"
+    t.boolean  "activated",              :default => false
   end
 
   add_index "players", ["email"], :name => "index_players_on_email", :unique => true

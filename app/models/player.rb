@@ -47,6 +47,10 @@ class Player < ActiveRecord::Base
     PlayerMailer.password_reset(self).deliver
   end
 
+  def refresh_remember_token
+    generate_token(:remember_token) 
+  end
+
   def availability_feed
     Availability.where("player_id = ? AND start_time > ?", id, DateTime.now)
   end
