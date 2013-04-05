@@ -38,9 +38,13 @@ class AvailabilitiesController < ApplicationController
       end
     elsif @availability.save
       flash[:success] = 'Availability created!'
-      unless current_player.activated? 
-        flash[:alert] = "You are currently unable to help create games through your availabilities." + 
-          "Have you confirmed your email address using the link sent to #{current_player.email}?"
+      if !current_player.activated? 
+        flash[:alert] = "You are currently unable to help create games through your availabilities."
+        if current_player.created_at > 30.days.ago
+          flash[:alert] += " Have you confirmed your email address using the link sent to #{current_player.email}?"
+        elsif !current_player.subscribed?
+          flash[:alert] += " Please consider subscribing for full privileges."
+        end
       end
       redirect_to root_url
     else

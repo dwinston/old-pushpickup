@@ -37,16 +37,30 @@ describe "AvailabilityPages" do
       end
     end
 
-    #describe 'while not activated' do
-    #  let!(:inactive_player) { FactoryGirl.create(:player, name: 'Argon', activated: false) }
+    describe 'while not activated' do
+      before do
+        player.toggle!(:activated)
+        sign_in player
+      end
 
-    #  before do
-    #    sign_in inactive_player
-    #    submit_availability FactoryGirl.build(:availability, start_time: soon), [field]
-    #  end
+      describe 'and in trial period' do
+        before { submit_availability FactoryGirl.build(:availability, start_time: soon), [field] }
 
-    #  it { should have_content "currently unable" }
-    #end
+        it { should have_content "currently unable" }
+        it { should have_content "Have you confirmed" }
+      end
+
+      describe 'and with expired trial period' do
+        before do
+          player.update_attribute(:created_at, 31.days.ago)
+          sign_in player
+          submit_availability FactoryGirl.build(:availability, start_time: soon), [field]
+        end
+
+        it { should have_content "currently unable" }
+        it { should have_content "consider subscribing" }
+      end
+    end
 
     describe 'with enough other players available for a game' do
       let(:later) { soon + 1.day } 
