@@ -15,8 +15,9 @@ class PlayersController < ApplicationController
   def create
     @player = Player.new(params[:player])
     if @player.save
-      @player.send_signup_confirmation
-      flash[:success] = "Welcome to Push Pickup! Email sent to #{@player.email}. Click the link in that email to confirm you own that email address."
+      @player.send_email_confirmation
+      flash[:success] = "Welcome to Push Pickup! Email sent to #{@player.email} to confirm ownership of that email address."
+      sign_in @player
       redirect_to root_path 
     else
       render 'new'
@@ -24,14 +25,19 @@ class PlayersController < ApplicationController
   end
 
   def edit
-    @needs = @player.needs
+    #@needs = @player.needs
   end
 
   def update
+    old_email = @player.email
     if @player.update_attributes(params[:player])
       flash[:success] = 'Profile updated'
+      if @player.reload.email != old_email
+        @player.send_email_confirmation
+        flash[:notice] = "Email sent to #{@player.email} to confirm ownership of that email address."
+      end
       sign_in @player
-      redirect_to root_url
+      redirect_to root_path 
     else
       render 'edit'
     end

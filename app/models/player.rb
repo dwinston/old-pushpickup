@@ -2,19 +2,20 @@
 #
 # Table name: players
 #
-#  id                     :integer          not null, primary key
-#  name                   :string(255)
-#  email                  :string(255)
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
-#  password_digest        :string(255)
-#  remember_token         :string(255)
-#  admin                  :boolean          default(FALSE)
-#  password_reset_token   :string(255)
-#  password_reset_sent_at :datetime
-#  activated              :boolean          default(FALSE)
-#  activate_token         :string(255)
-#  activate_sent_at       :datetime
+#  id                         :integer          not null, primary key
+#  name                       :string(255)
+#  email                      :string(255)
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#  password_digest            :string(255)
+#  remember_token             :string(255)
+#  admin                      :boolean          default(FALSE)
+#  password_reset_token       :string(255)
+#  password_reset_sent_at     :datetime
+#  activated                  :boolean          default(FALSE)
+#  email_confirmation_token   :string(255)
+#  email_confirmation_sent_at :datetime
+#  subscribed                 :boolean          default(FALSE)
 #
 
 class Player < ActiveRecord::Base
@@ -50,11 +51,11 @@ class Player < ActiveRecord::Base
     PlayerMailer.password_reset(self).deliver
   end
 
-  def send_signup_confirmation
-    generate_token(:activate_token) 
-    self.activate_sent_at = Time.zone.now
+  def send_email_confirmation
+    generate_token(:email_confirmation_token) 
+    self.email_confirmation_sent_at = Time.zone.now
     save!(validate: false)
-    PlayerMailer.signup_confirmation(self).deliver
+    PlayerMailer.email_confirmation(self).deliver
   end
 
   def availability_feed

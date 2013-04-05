@@ -44,7 +44,7 @@ describe "Player pages" do
         it { should have_content player.name }
         it { should have_selector 'div.alert.alert-success', text: 'Welcome' }
         it { should have_link 'Sign out' }
-        it { should_not be_activated }
+        specify { player.should_not be_activated }
       end
     end
   end

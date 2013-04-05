@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130404233410) do
+ActiveRecord::Schema.define(:version => 20130405010952) do
 
   create_table "availabilities", :force => true do |t|
     t.datetime "start_time"
@@ -86,6 +86,7 @@ ActiveRecord::Schema.define(:version => 20130404233410) do
     t.boolean  "activated",                  :default => false
     t.string   "email_confirmation_token"
     t.datetime "email_confirmation_sent_at"
+    t.boolean  "subscribed",                 :default => false
   end
 
   add_index "players", ["email"], :name => "index_players_on_email", :unique => true

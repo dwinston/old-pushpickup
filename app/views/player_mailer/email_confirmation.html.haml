@@ -1,0 +1,9 @@
+%p
+  = succeed ',' do
+    = @player.name
+
+%p To confirm that you own this email address, click the link below:
+
+%p= link_to "Email Confirmation", email_confirmation_url(@player.email_confirmation_token)
+
+%p If you did not request to use this email address, just ignore this email.

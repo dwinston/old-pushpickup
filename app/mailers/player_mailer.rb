@@ -5,9 +5,9 @@ class PlayerMailer < ActionMailer::Base
     "[Push Pickup] "
   end
 
-  def signup_confirmation(player)
+  def email_confirmation(player)
     @player = player
-    mail to: player.email, subject: subject_preface + "Sign Up Confirmation"
+    mail to: player.email, subject: subject_preface + "Email Confirmation"
   end
 
   def password_reset(player)

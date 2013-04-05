@@ -12,7 +12,7 @@ namespace :db do
     # make players
     20.times do |n|
       name = Faker::Name.name
-      email = "example-#{n+1}@railstutorial.org"
+      email = "dwinst+#{n+1}@gmail.com"
       password = 'password'
       player = Player.create!(name: name,
                               email: email,
@@ -39,7 +39,7 @@ namespace :db do
       end
     end
 
-   some_players = Player.all(limit: 18)
+   some_players = Player.all(limit: 14)
 
     # make availabilities
     10.times do

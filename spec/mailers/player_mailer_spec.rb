@@ -13,15 +13,15 @@ describe PlayerMailer do
     end
   end
 
-  describe "signup_confirmation" do
-    let(:player) { FactoryGirl.create(:player, activated: false) }
-    let(:mail) { PlayerMailer.signup_confirmation(player) }
+  describe "email_confirmation" do
+    let(:player) { FactoryGirl.create(:player, activated: false, email_confirmation_token: "anything") }
+    let(:mail) { PlayerMailer.email_confirmation(player) }
 
-    it "sends player signup confirmation url" do
-      mail.subject.should include("Sign Up Confirmation")
+    it "sends player email confirmation url" do
+      mail.subject.should include("Email Confirmation")
       mail.to.should eq([player.email])
       mail.from.should eq(["dwinst@gmail.com"])
-      mail.body.encoded.should match(signup_confirmation_path(player.activate_token))
+      mail.body.encoded.should match(email_confirmation_path(player.email_confirmation_token))
     end
   end
 

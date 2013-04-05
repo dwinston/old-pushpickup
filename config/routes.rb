@@ -1,13 +1,11 @@
 PushPickup::Application.routes.draw do
-  get "email_confirmations/show"
-
   resources :players
   resources :sessions, only: [:new, :create, :destroy]
   resources :availabilities, only: [:create, :destroy]
   resources :fields
   resources :cities, only: [:index, :new, :create, :destroy]
-  resources :password_resets
-  resources :signup_confirmations, only: :show
+  resources :password_resets, only: [:new, :create, :edit, :update]
+  resources :email_confirmations, only: :show
 
   root to: 'static_pages#home'
   
