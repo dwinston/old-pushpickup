@@ -21,23 +21,32 @@ namespace :db do
       player.toggle!(:activated)
     end
 
-    # make cities and fields
-    5.times do
-      city = Faker::Address.city
-      state_abbr = Faker::Address.state_abbr 
-      City.create!(name: "#{city}, #{state_abbr}")
+    # make fake cities and fields
+    #5.times do
+    #  city = Faker::Address.city
+    #  state_abbr = Faker::Address.state_abbr 
+    #  City.create!(name: "#{city}, #{state_abbr}")
+    #end
+    #cities = City.all(limit: 5)
+    #5.times do
+    #  cities.each do |city|
+    #    name = Faker::Name.last_name + ' Park'
+    #    street_address = Faker::Address.street_address 
+    #    zip_code = Faker::Address.zip_code 
+    #    notes = Faker::Lorem.paragraphs.join("\n")
+    #    city.fields.create!(name: name, street_address: street_address, 
+    #                        zip_code: zip_code, notes: notes)
+    #  end
+    #end
+
+    # make real cities and fields
+    examples = Field.examples_for_testing
+    examples.each do |example|
+      city = City.find_or_create_by_name!(example[:city_name])
+      city.fields.create!(name: example[:name], street_address: example[:street_address],
+                          zip_code: example[:zip_code], notes: example[:notes])
     end
-    cities = City.all(limit: 5)
-    5.times do
-      cities.each do |city|
-        name = Faker::Name.last_name + ' Park'
-        street_address = Faker::Address.street_address 
-        zip_code = Faker::Address.zip_code 
-        notes = Faker::Lorem.paragraphs.join("\n")
-        city.fields.create!(name: name, street_address: street_address, 
-                            zip_code: zip_code, notes: notes)
-      end
-    end
+
 
    some_players = Player.all(limit: 14)
 
