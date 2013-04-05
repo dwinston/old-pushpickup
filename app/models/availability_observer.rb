@@ -93,7 +93,8 @@ class AvailabilityObserver < ActiveRecord::Observer
       begin 
         # discard cached field.availabilities and reload from database
         candidates = field.availabilities(true).select do |a| 
-          a.duration >= my_min_duration && 
+          a.player.activated? &&
+            a.duration >= my_min_duration && 
             timeslot_intersection(common[:timeslot],
                                   {start_time: a.start_time, end_time: a.start_time.advance(minutes: a.duration)},
                                   min_overlap: [my_min_duration, a.player.min_duration_of_game.value].max)

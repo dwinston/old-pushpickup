@@ -5,7 +5,7 @@ describe "AvailabilityPages" do
 
   let(:player) { FactoryGirl.create(:player) }
   let(:field) {  FactoryGirl.create(:field) }
-  let(:soon) { DateTime.now.advance(hours: 3).beginning_of_hour }
+  let(:soon) { Time.zone.now.beginning_of_hour + 3.hours }
   let!(:availability) { FactoryGirl.create(:availability, player: player, 
                                           start_time: soon, fields: [field]) }
   before { sign_in player }
@@ -37,8 +37,19 @@ describe "AvailabilityPages" do
       end
     end
 
+    #describe 'while not activated' do
+    #  let!(:inactive_player) { FactoryGirl.create(:player, name: 'Argon', activated: false) }
+
+    #  before do
+    #    sign_in inactive_player
+    #    submit_availability FactoryGirl.build(:availability, start_time: soon), [field]
+    #  end
+
+    #  it { should have_content "currently unable" }
+    #end
+
     describe 'with enough other players available for a game' do
-      let(:later) { soon.advance(days: 1) } 
+      let(:later) { soon + 1.day } 
 
       before do
         13.times { FactoryGirl.create(:availability, start_time: later, fields: [field]) }
