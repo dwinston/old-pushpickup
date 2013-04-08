@@ -1,0 +1,9 @@
+= link_to field.name, field
+.address
+  = link_to "#{field.street_address}, #{field.city.name} #{field.zip_code}", google_maps_link(field), target: "_blank"
+= wrap(field.notes)
+- if signed_in? && current_player.admin? 
+  .modify
+    = link_to 'edit', edit_field_path(field) 
+    |
+    = link_to 'delete', field, method: 'delete', data: {confirm: "You sure?" }

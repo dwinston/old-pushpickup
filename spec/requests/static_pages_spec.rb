@@ -79,6 +79,8 @@ describe "StaticPages" do
     page.should have_selector 'title', text: full_title('Sign up')
     click_link "push pickup"
     page.should have_selector 'title', text: full_title('')
+    click_link "Fields"
+    page.should have_selector 'title', text: full_title('Fields')
   end
 
 end

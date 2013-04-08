@@ -1,5 +1,5 @@
-- provide :title, 'Find fields'
-%h1 Find fields
+- provide :title, 'Fields'
+%p= gmaps4rails(@field_markers)
 .row
   .span4
     = form_tag fields_path, method: 'get' do 
@@ -7,10 +7,10 @@
       = select_tag :city_id, options_from_collection_for_select(City.all, :id, :name, @cities), 
                    multiple: true, size: 10
       = submit_tag 'Find', class: 'btn btn-primary'
-    - if current_player.admin?
+    - if signed_in? && current_player.admin?
       = link_to 'Add field', new_field_path
   .span8
-    %p.text-info Select one or more fields 
+    %p Select one or more fields 
     = form_tag availabilities_path, method: 'post' do
       = hidden_field_tag "availability[field_ids][]", nil
       = submit_tag 'Choose field(s)', class: 'btn btn-large btn-primary'

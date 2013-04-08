@@ -5,8 +5,8 @@ describe "Field Pages" do
   subject { page }
   let(:player) { FactoryGirl.create(:player) }
   let(:admin) { FactoryGirl.create(:admin) }
-  let(:city) { FactoryGirl.create(:city) }
-  let!(:field) { FactoryGirl.create(:field, city: city) }
+  let!(:field) { FactoryGirl.create(:field) }
+  let(:city) { field.city }
   before do 
     sign_in admin
   end
@@ -36,12 +36,17 @@ describe "Field Pages" do
     end
   end
 
-  describe 'index' do
-    before do 
-      visit fields_path
-    end
+  describe 'show' do
+    before { visit field_path(field) }
 
-    it { should have_selector 'title', text: 'Find fields' }
+    it { should have_selector 'title', text: field.name }
+    it { should have_content field.name }
+  end
+
+  describe 'index' do
+    before { visit fields_path }
+
+    it { should have_selector 'title', text: 'Fields' }
     it { should have_link 'Add field', href: new_field_path }
     it { should have_content field.name }
 

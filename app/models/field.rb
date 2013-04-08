@@ -10,6 +10,9 @@
 #  street_address :string(255)
 #  zip_code       :string(255)
 #  city_id        :integer
+#  latitude       :float
+#  longitude      :float
+#  gmaps          :boolean
 #
 
 class Field < ActiveRecord::Base
@@ -19,14 +22,20 @@ class Field < ActiveRecord::Base
   has_many :games
   has_many :availabilities, through: :fieldslots
   before_destroy :destroy_orphaned_availabilties_and_all_fieldslots
+  acts_as_gmappable
+
+  def gmaps4rails_address
+    # describe how to retrieve the address from your model, if you use directly a db column, you can dry your code, see wiki
+    "#{self.street_address}, #{self.city.name} #{self.zip_code}"
+  end
 
   validates :name, presence: true
   validates :zip_code, presence: true
   validates :street_address, presence: true  
 
   def self.examples_for_testing
-    [{name: "Maxwell Family Field", zip_code: "94720", street_address: "2205 Piedmont Ave", city_name: "Berkeley, CA"},
-     {name: "Bushrod Park", zip_code: "94609", street_address: "6051 Racine St", city_name: "Oakland, CA"},
+    [{name: "Maxwell Family Field", zip_code: "94720", street_address: "2205 Piedmont Ave", city_name: "Berkeley, CA", notes: ""},
+     {name: "Bushrod Park", zip_code: "94609", street_address: "6051 Racine St", city_name: "Oakland, CA", notes: ""},
      {name: "Cubberly Field", zip_code: "94306", street_address: "4100 Middlefield Rd", city_name: "Palo Alto, CA", notes: "Enter Cubberley Community Center's south(east) entrance, directly opposite Montrose Avenue, and proceed all the way to the back."}]
   end
 

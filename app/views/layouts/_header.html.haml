@@ -5,6 +5,7 @@
       %nav
         %ul.nav.pull-right
           %li= link_to "Home", root_path
+          %li= link_to "Fields", fields_path
           %li= link_to "Help", help_path
           - if signed_in?
             - if current_player.admin?

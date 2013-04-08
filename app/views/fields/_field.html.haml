@@ -2,13 +2,4 @@
   %span
     = check_box_tag "availability[field_ids][]", field.id, false, id: dom_id(field)
     = label_tag dom_id(field), field.name
-  .address
-    = "#{field.street_address}, #{field.city.name} #{field.zip_code}"
-    |
-    = link_to 'map', google_maps_link(field)
-  = wrap(field.notes)
-  - if current_player.admin? 
-    .modify
-      = link_to 'edit', edit_field_path(field) 
-      |
-      = link_to 'delete', field, method: 'delete', data: {confirm: "You sure?" }
+  = render partial: 'shared/field_info', locals: {field: field}

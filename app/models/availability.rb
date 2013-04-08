@@ -35,7 +35,9 @@ class Availability < ActiveRecord::Base
     less_than: 24 * 60, message: 'must be under 24 hours'}
   validates :player_id, presence: true
   validate :at_least_one_field, unless: :adding_fields
+
   default_scope order: 'availabilities.start_time ASC'
+  scope :future, lambda { where("start_time > ?", Time.zone.now) }
 
   def start_time_to_s
     start_time.in_time_zone.strftime("%A, %B #{start_time.day.ordinalize}, %I:%M%p")

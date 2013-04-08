@@ -10,11 +10,19 @@
 
   .field.field_options
     = hidden_field_tag "availability[field_ids][]", nil
-    - current_player.fields.uniq.each do |field|
+    -# Display checkboxes for fields of current player if signed in, plus field shown if on a field show page.
+    - if signed_in?
+      - current_player.fields.to_a.push(@field).uniq.select{|field| !field.nil?}.each do |field|
+        %div
+          = check_box_tag "availability[field_ids][]", field.id, 
+            @availability.field_ids.include?(field.id), id: dom_id(field)
+          = label_tag dom_id(field), field.name
+    - elsif @field 
       %div
-        = check_box_tag "availability[field_ids][]", field.id, 
-                      @availability.field_ids.include?(field.id), id: dom_id(field)
-        = label_tag dom_id(field), field.name
+        = check_box_tag "availability[field_ids][]", @field.id, 
+          @availability.field_ids.include?(@field.id), id: dom_id(@field)
+        = label_tag dom_id(@field), @field.name
 
   .field= f.submit 'Add fields', name: 'add_fields', class: 'btn btn-info'
-  .field= f.submit 'Post', class: ('btn btn-large ' + (current_player.fields.blank? ? 'btn-danger' : 'btn-primary'))
+  .field= f.submit 'Post', 
+    class: ('btn btn-large ' + (signed_in? && current_player.fields.blank? && @field.nil? ? 'btn-danger' : 'btn-primary'))

@@ -11,6 +11,7 @@ gem 'bootstrap-will_paginate', '0.0.6'
 gem 'dotiw', '1.1.1' # better distance_of_time_in_words
 gem 'chronic', '0.9.0'
 gem 'chronic_duration', '0.9.6'
+gem 'gmaps4rails', '1.5.6'
 
 group :development, :test do
   gem 'sqlite3', '1.3.5'

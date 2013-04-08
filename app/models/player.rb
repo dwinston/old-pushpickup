@@ -59,11 +59,11 @@ class Player < ActiveRecord::Base
   end
 
   def availability_feed
-    Availability.where("player_id = ? AND start_time > ?", id, DateTime.now)
+    availabilities.future
   end
   
   def game_feed
-    games.where("start_time > ?", DateTime.now) 
+    games.future
   end
   
   private

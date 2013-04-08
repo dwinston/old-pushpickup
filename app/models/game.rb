@@ -16,6 +16,7 @@ class Game < ActiveRecord::Base
   has_and_belongs_to_many :players
 
   default_scope order: 'games.start_time ASC'
+  scope :future, lambda { where("start_time > ?", Time.zone.now) }
 
   after_create do
     PlayerMailer.game_notification(players.pluck(:email), field, start_time, duration).deliver

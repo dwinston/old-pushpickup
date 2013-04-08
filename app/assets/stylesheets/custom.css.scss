@@ -262,3 +262,6 @@ aside {
   }
 }
 
+/* correct interference of Bootstrap with Google Maps rendering */
+#map label { width: auto; display:inline; }
+#map img { max-width: none; }

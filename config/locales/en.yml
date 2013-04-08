@@ -7,3 +7,5 @@ en:
     attributes:
       player:
         password_digest: "Password"
+      field:
+        gmaps4rails_address: "Geocoding failure:"

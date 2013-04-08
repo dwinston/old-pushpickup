@@ -10,6 +10,9 @@
 #  street_address :string(255)
 #  zip_code       :string(255)
 #  city_id        :integer
+#  latitude       :float
+#  longitude      :float
+#  gmaps          :boolean
 #
 
 require 'spec_helper'
