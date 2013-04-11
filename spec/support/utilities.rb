@@ -49,6 +49,13 @@ def submit_availability(fields, starts_at = {})
   click_button 'Post'
 end
 
+def submit_unavailability(fields, why_not_open, starts_at = {})
+  check 'Unavailability?'
+  fill_in 'Why?', with: why_not_open
+  submit_availability(fields, starts_at)
+end
+
+
 RSpec::Matchers.define :have_error_message do |message|
   match do |page|
     page.should have_selector 'div.alert.alert-error', text: message

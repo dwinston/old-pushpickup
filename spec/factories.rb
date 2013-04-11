@@ -59,6 +59,18 @@ FactoryGirl.define do
     before(:create) do |availability, evaluator|
       availability.fields = evaluator.fields
     end
+
+    factory :unavailability do
+      ignore do
+        why_not_open 'Zombie apocalypse'
+      end
+
+      after(:create) do |unavailability, evaluator|
+        unavailability.fieldslots.each do |fs| 
+          fs.update_attributes!(open: false, why_not_open: evaluator.why_not_open)
+        end
+      end
+    end
   end
 
   factory :fieldslot do

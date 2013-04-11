@@ -103,6 +103,16 @@ describe "AvailabilityPages" do
 
         it { should have_content 'Unavailability created' }
       end
+
+      describe 'with enough other players available for a game during the unavailability' do
+        before do
+          submit_unavailability [field], 'Because I said so', day: soon.to_s(:weekday), time: soon.to_s(:ampm_time) 
+          14.times { FactoryGirl.create(:availability, start_time: soon, fields: [field]) }
+          visit field_path(field)
+        end
+
+        it { should_not have_content "GAME ON at #{field.name}" }
+      end
     end
   end
 

@@ -22,7 +22,7 @@ class Field < ActiveRecord::Base
   has_many :games
   has_many :availabilities, through: :fieldslots
   before_destroy :destroy_orphaned_availabilties_and_all_fieldslots
-  acts_as_gmappable
+  acts_as_gmappable if !Rails.env.test?
 
   def gmaps4rails_address
     # describe how to retrieve the address from your model, if you use directly a db column, you can dry your code, see wiki

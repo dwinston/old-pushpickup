@@ -15,7 +15,7 @@ class FieldsController < ApplicationController
     @cities = params[:city_ids]
     @field_markers = @fields.to_gmaps4rails do |field, marker|
       marker.infowindow render_to_string(partial: '/shared/field_info', locals: {field: field}) 
-    end
+    end if !Rails.env.test?
   end
 
   def new

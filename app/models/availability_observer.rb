@@ -1,6 +1,6 @@
 class AvailabilityObserver < ActiveRecord::Observer
   def after_save(availability)
-    create_games(availability)
+    create_games(availability) if !availability.unavailability?
   end
 
   def timeslot_intersection(ts1, ts2, options = {})
@@ -10,7 +10,7 @@ class AvailabilityObserver < ActiveRecord::Observer
     (((end_time - start_time) / 60) >= min_overlap) && {start_time: start_time, end_time: end_time}
   end
   
-  # returns an Array of 0 or 1 or 2 timeslots
+  # returns an Array yielding 0 or 1 or 2 timeslots
   def timeslot_difference(ts1, ts2) # ts1 minus ts2
     # six possibilities: 
     #   |*|    | *|     ||    |*   *|    |* |     |*|     # ts1                                     
@@ -39,8 +39,20 @@ class AvailabilityObserver < ActiveRecord::Observer
     candidate.player.games.any? do |game| 
       game_timeslot = {start_time: game.start_time, end_time: game.start_time.advance(minutes: game.duration)}
       unconflicted = timeslot_difference(common[:timeslot], game_timeslot)
-      unconflicted.none? { |ts| timeslot_intersection(ts, candidate_timeslot, min_overlap: common[:min_duration]) }
+      unconflicted.none?{|ts| timeslot_intersection(ts, candidate_timeslot, min_overlap: common[:min_duration])}
     end
+  end
+
+  # If possible, returns a start time for a game of duration common[:min_duration] within common[:timeslot] 
+  # that avoids closed fieldslots on common[:field].
+  def avoiding_closed_fieldslots(common)
+    unconflicted = [common[:timeslot]]
+    common[:field].fieldslots.closed.each do |fs|
+      unavailability_timeslot = {start_time: fs.availability.start_time, 
+                                 end_time: fs.availability.start_time + fs.availability.duration.minutes}
+      unconflicted = unconflicted.flat_map{|ts| timeslot_difference(ts, unavailability_timeslot)}
+    end
+    unconflicted.find{|ts| ts[:end_time] >= ts[:start_time] + common[:min_duration].minutes}.try(:fetch, :start_time)
   end
 
   def satisfies_player_needs(player, common)
@@ -63,10 +75,11 @@ class AvailabilityObserver < ActiveRecord::Observer
     # below test is for equality because game creation is sought after every single save of an Availability
     if compatibles.count == common[:min_players] 
       # possible duration is ((common[:timeslot][:end_time] - common[:timeslot][:start_time]) / 60).round
+      open_start_time = avoiding_closed_fieldslots(common)
       common[:field].games.create!(
-        start_time: common[:timeslot][:start_time],
+        start_time: open_start_time,
         duration: common[:min_duration],
-        player_ids: compatibles.map(&:player_id))
+        player_ids: compatibles.map(&:player_id)) if open_start_time
     elsif candidates.empty?
       false
     else
@@ -91,8 +104,8 @@ class AvailabilityObserver < ActiveRecord::Observer
       common = {timeslot: {start_time: my_start_time, end_time: my_end_time},
                 min_players: my_min_players, min_duration: my_min_duration, field: field}
       begin 
-        # discard cached field.availabilities and reload from database
-        candidates = field.availabilities(true).select do |a| 
+        # be mindful to reload from database
+        candidates = Availability.find(field.fieldslots.not_closed.pluck(:availability_id)).select do |a| 
           a.player.activated? &&
             a.duration >= my_min_duration && 
             timeslot_intersection(common[:timeslot],

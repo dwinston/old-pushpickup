@@ -16,6 +16,6 @@ class Fieldslot < ActiveRecord::Base
   belongs_to :availability
   belongs_to :field
 
-  scope :open, where(open: true)
+  scope :not_closed, where(open: true)
   scope :closed, where(open: false)
 end

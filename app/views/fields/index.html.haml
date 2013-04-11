@@ -1,5 +1,5 @@
 - provide :title, 'Fields'
-%p= gmaps4rails(@field_markers)
+%p= gmaps4rails(@field_markers) if !Rails.env.test?
 .row
   .span4
     Choose cities near you:
