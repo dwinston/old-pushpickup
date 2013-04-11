@@ -20,6 +20,15 @@ def sign_in(player)
   cookies[:remember_token] = player.remember_token
 end
 
+# signs in when already at signin_path
+def and_sign_in(player)
+  fill_in 'Email',    with: player.email
+  fill_in 'Password', with: player.password
+  click_button 'Sign in'
+  # Sign in when not using Capybara as well.
+  cookies[:remember_token] = player.remember_token
+end
+
 def fill_in_field_form(field)
   visit new_field_path
   fill_in 'Name', with: field.name
@@ -29,10 +38,11 @@ def fill_in_field_form(field)
   fill_in 'Notes', with: field.notes
 end
 
-def submit_availability(availability, fields)
-  visit root_path
-  fill_in 'Start time', with: availability.start_time.to_s
-  fill_in 'Duration', with: availability.duration.to_s
+def submit_availability(fields, starts_at = {})
+  day, time, duration = starts_at[:day], starts_at[:time], starts_at[:duration]
+  select day if day
+  select time.lstrip if time # due to Time::DATE_FORMATS[:ampm_time] = "%l:%M%P"
+  select duration if duration
   fields.each do |field| 
     check field.name
   end

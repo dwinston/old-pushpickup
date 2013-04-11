@@ -4,8 +4,8 @@
   %span.fields
     %strong GAME ON 
     at #{feed_item.field.name}
-  %span.start_time= start_time_to_s(feed_item.start_time)
+  %span.start_time= feed_item.start_time.to_s(:weekday_and_ordinal)
   %span.duration
     for
     at least 
-    = duration_to_s(feed_item.start_time, feed_item.duration)
+    = distance_of_time_in_words(feed_item.start_time, feed_item.start_time + feed_item.duration.minutes)

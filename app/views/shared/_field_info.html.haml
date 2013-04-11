@@ -1,6 +1,6 @@
 = link_to field.name, field
 .address
-  = link_to "#{field.street_address}, #{field.city.name} #{field.zip_code}", google_maps_link(field), target: "_blank"
+  = "#{field.street_address}, #{field.city.name} #{field.zip_code}"
 = wrap(field.notes)
 - if signed_in? && current_player.admin? 
   .modify

@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.12'
+gem 'rails', '3.2.13'
 gem 'haml'
 gem 'haml-rails'
 gem 'bootstrap-sass', "~> 2.3.0.1" #'2.1'
@@ -9,8 +9,6 @@ gem 'faker', '1.0.1'
 gem 'will_paginate', '3.0.3'
 gem 'bootstrap-will_paginate', '0.0.6'
 gem 'dotiw', '1.1.1' # better distance_of_time_in_words
-gem 'chronic', '0.9.0'
-gem 'chronic_duration', '0.9.6'
 gem 'gmaps4rails', '1.5.6'
 
 group :development, :test do

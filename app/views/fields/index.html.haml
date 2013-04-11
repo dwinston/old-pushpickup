@@ -2,20 +2,20 @@
 %p= gmaps4rails(@field_markers)
 .row
   .span4
+    Choose cities near you:
     = form_tag fields_path, method: 'get' do 
-      = label_tag :city_id, 'Select one or more cities'
-      = select_tag :city_id, options_from_collection_for_select(City.all, :id, :name, @cities), 
-                   multiple: true, size: 10
-      = submit_tag 'Find', class: 'btn btn-primary'
+      .field.field_options
+        -#= hidden_field_tag "city_ids[]", nil
+        - City.all.each do |city|
+          .checkbox
+            = check_box_tag "city_ids[]", city.id, @cities.include?(city.id.to_s), id: dom_id(city)
+            = label_tag dom_id(city), city.name
+        = submit_tag 'Refine', class: 'btn btn-primary'
     - if signed_in? && current_player.admin?
       = link_to 'Add field', new_field_path
   .span8
-    %p Select one or more fields 
-    = form_tag availabilities_path, method: 'post' do
-      = hidden_field_tag "availability[field_ids][]", nil
-      = submit_tag 'Choose field(s)', class: 'btn btn-large btn-primary'
-      %ul.fields
-        = render @fields
-      = submit_tag 'Choose field(s)', class: 'btn btn-large btn-primary'
+    %p 
+      Choose a field near you:
+      %ul.fields= render @fields
 
 

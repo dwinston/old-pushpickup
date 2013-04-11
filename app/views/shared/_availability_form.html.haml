@@ -2,27 +2,40 @@
 = form_for(@availability) do |f|
   = render 'shared/error_messages', object: f.object
 
-  = f.label :start_time
-  .input-large.field= f.text_field :start_time, placeholder: 'tuesday 5pm'
+  = f.label :day, 'on'
+  .input-medium.field= f.select :day, options_for_select(@availability.start_day_options, selected: @availability.day)
 
-  = f.label :duration 
-  .input-small.field= f.text_field :duration, placeholder: '2 hours'
+  = f.label :hour_and_minute, 'starting at'
+  .input-small.field= f.select :hour_and_minute, 
+    options_for_select(@availability.start_hour_and_minute_options, 
+    selected: @availability.hour_and_minute || @availability.soonest_start_time)
 
-  .field.field_options
-    = hidden_field_tag "availability[field_ids][]", nil
-    -# Display checkboxes for fields of current player if signed in, plus field shown if on a field show page.
-    - if signed_in?
-      - current_player.fields.to_a.push(@field).uniq.select{|field| !field.nil?}.each do |field|
-        %div
-          = check_box_tag "availability[field_ids][]", field.id, 
-            @availability.field_ids.include?(field.id), id: dom_id(field)
-          = label_tag dom_id(field), field.name
-    - elsif @field 
-      %div
-        = check_box_tag "availability[field_ids][]", @field.id, 
-          @availability.field_ids.include?(@field.id), id: dom_id(@field)
-        = label_tag dom_id(@field), @field.name
+  = f.label :duration_in_sec, 'for' 
+  .input-medium.field= f.select :duration_in_sec, 
+    options_for_select(@availability.duration_options, selected: @availability.duration_in_sec)
+
+  -#= hidden_field_tag "availability[field_ids][]", nil
+  -# Display checkboxes for fields of current player if signed in, plus field shown if on a field show page.
+  - if signed_in?
+    - current_player.fields.to_a.concat(Field.find(@availability.field_ids)).push(@field).uniq.select{|field| !field.nil?}.each do |field|
+      .checkbox
+        = check_box_tag "availability[field_ids][]", field.id, 
+          @availability.field_ids.include?(field.id), id: dom_id(field)
+        = label_tag dom_id(field), field.name
+  - elsif @field 
+    .checkbox
+      = check_box_tag "availability[field_ids][]", @field.id, 
+        @availability.field_ids.include?(@field.id), id: dom_id(@field)
+      = label_tag dom_id(@field), @field.name
 
   .field= f.submit 'Add fields', name: 'add_fields', class: 'btn btn-info'
   .field= f.submit 'Post', 
     class: ('btn btn-large ' + (signed_in? && current_player.fields.blank? && @field.nil? ? 'btn-danger' : 'btn-primary'))
+
+  - if signed_in? && current_player.admin?
+    .checkbox
+      = check_box_tag 'unavailability', 'yes'
+      = label_tag 'unavailability', 'Unavailability?'
+    = label_tag 'why_not_open', 'Why?'
+    .input-medium.field= text_field_tag 'why_not_open'
+

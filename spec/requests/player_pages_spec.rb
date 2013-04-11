@@ -64,8 +64,8 @@ describe "Player pages" do
     it { should have_content player.name }
 
     describe 'availabilities' do
-      it { should have_content a1.start_time_to_s }
-      it { should have_content a2.start_time_to_s }
+      it { should have_content a1.start_time.to_s(:weekday_and_ordinal) }
+      it { should have_content a2.start_time.to_s(:weekday_and_ordinal) }
       it { should have_content player.availabilities.count }
 
       describe 'should not show if in past' do
@@ -74,8 +74,8 @@ describe "Player pages" do
           a1.save(validate: false)
           visit player_path(player)
         end
-        it { should_not have_content a1.start_time_to_s }
-        it { should have_content a2.start_time_to_s }
+        it { should_not have_content a1.start_time.to_s(:weekday_and_ordinal) }
+        it { should have_content a2.start_time.to_s(:weekday_and_ordinal) }
       end
     end
   end

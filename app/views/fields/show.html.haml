@@ -1,8 +1,12 @@
-= provide :title, @field.name
+- provide :title, @field.name
 .row
   %aside.span4
     %section= render partial: 'shared/field_info', locals: {field: @field}
     %section= render 'shared/availability_form'
-  .span8
+  .span4
     %h3 Games
     = render 'shared/game_feed'
+  .span4
+    %h3 Unavailabilities
+    = render partial: 'shared/availability_feed', 
+      locals: {feed_items: @field.availabilities.future.select(&:unavailability?), bar_type: 'bar-danger', open: false}

@@ -28,8 +28,9 @@ describe "AvailabilityPages" do
     describe 'with valid information' do
 
       before do
-        fill_in 'Start time', with: 'this sunday 2pm'
-        fill_in 'Duration', with: '2 hours'
+        select 'tomorrow'
+        select '1:00pm'
+        select '2 hours'
         check field.name
       end
       it 'should create an availability' do
@@ -44,7 +45,7 @@ describe "AvailabilityPages" do
       end
 
       describe 'and in trial period' do
-        before { submit_availability FactoryGirl.build(:availability, start_time: soon), [field] }
+        before { submit_availability [field] }
 
         it { should have_content "currently unable" }
         it { should have_content "Have you confirmed" }
@@ -54,7 +55,7 @@ describe "AvailabilityPages" do
         before do
           player.update_attribute(:created_at, 31.days.ago)
           sign_in player
-          submit_availability FactoryGirl.build(:availability, start_time: soon), [field]
+          submit_availability [field] 
         end
 
         it { should have_content "currently unable" }
@@ -69,11 +70,40 @@ describe "AvailabilityPages" do
         13.times { FactoryGirl.create(:availability, start_time: later, fields: [field]) }
         # :availability factory creates fields after :create but not after :build, necessitating
         # the passing of fields as a separate argument to submit_availability
-        submit_availability FactoryGirl.build(:availability, start_time: later), [field]
+        visit root_path
+        submit_availability [field], day: later.to_s(:weekday), time: later.to_s(:ampm_time) 
       end
       it { should have_content "GAME ON at #{field.name}" }
     end
 
+  end
+
+  describe 'unavailability creation' do
+    before { visit root_path }
+
+    it { should_not have_content 'Unavailability?' }
+    it { should_not have_content 'Why?' }
+
+    describe 'as admin' do
+      let(:admin) { FactoryGirl.create(:admin) }
+      before do
+        sign_in admin
+        visit field_path(field) # admin has no availabilities, so no fields are accessible from her root_path
+      end
+
+      it { should have_content 'Unavailability?' }
+      it { should have_content 'Why?' }
+
+      describe 'with a reason' do
+        before do
+          check 'Unavailability?'
+          fill_in 'Why?', with: 'first amendment overturned'
+          submit_availability [field]
+        end
+
+        it { should have_content 'Unavailability created' }
+      end
+    end
   end
 
   describe 'availability destruction' do

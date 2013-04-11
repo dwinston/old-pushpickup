@@ -1,5 +1,1 @@
-%li
-  %span
-    = check_box_tag "availability[field_ids][]", field.id, false, id: dom_id(field)
-    = label_tag dom_id(field), field.name
-  = render partial: 'shared/field_info', locals: {field: field}
+%li= render partial: 'shared/field_info', locals: {field: field}

@@ -45,8 +45,8 @@ describe Availability do
     it { should_not be_valid }
   end
 
-  describe 'with start_time in the distant future (two weeks)' do
-    before { availability.start_time = now.advance(days: 15) }
+  describe 'with start_time in the distant future (nine days)' do
+    before { availability.start_time = now.advance(days: 9) }
     it { should_not be_valid }
   end
 

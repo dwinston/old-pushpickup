@@ -4,11 +4,12 @@
       %section= render 'shared/player_info'
       %section= render 'shared/availability_form'
     .span4
-      %h3 Availabilities
-      = render 'shared/availability_feed'
-    .span4
       %h3 Games
       = render 'shared/game_feed'
+    .span4
+      %h3 Availabilities
+      = render partial: 'shared/availability_feed',
+        locals: {feed_items: @availability_feed_items, bar_type: 'bar-warning', open: true}
 - else
   .center.hero-unit
     %h1 Push Pickup

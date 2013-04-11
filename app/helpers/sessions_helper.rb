@@ -1,5 +1,7 @@
 module SessionsHelper
 
+  #include ActionDispatch::Integration::RequestHelpers
+
   def sign_in(player)
     cookies.permanent[:remember_token] = player.remember_token # 20.years.from_now
     self.current_player = player
@@ -35,7 +37,7 @@ module SessionsHelper
 
   def redirect_back_or(default)
     redirect_to(session[:return_to] || default)
-    session.delete :return_to
+    forget_location
   end
 
   def store_location

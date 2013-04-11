@@ -1,7 +1,7 @@
 %li
-  %span.start_time= availability.start_time_to_s
-  %span.duration for #{availability.duration_to_s}.
+  %span.start_time= availability.start_time.to_s(:weekday_and_ordinal)
+  %span.duration for #{distance_of_time_in_words(availability.start_time, availability.start_time + availability.duration.minutes)}
   - if current_player?(availability.player)
     = link_to 'delete', availability, method: :delete,
                                       data: { confirm: 'You sure?' },
-                                      title: availability.start_time_to_s
+                                      title: availability.start_time.to_s(:weekday_and_ordinal)

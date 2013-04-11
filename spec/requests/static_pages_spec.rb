@@ -30,13 +30,13 @@ describe "StaticPages" do
 
       it "should render the player's availability feed" do
         player.availability_feed.each do |item|
-          page.should have_selector "li#availability_#{item.id}", text: item.start_time_to_s
+          page.should have_selector "li#availability_#{item.id}", text: item.start_time.to_s(:weekday_and_ordinal)
         end
       end
 
       it "should render the player's games feed" do
         player.game_feed.each do |item|
-          page.should have_selector "li#game_#{item.id}", text: start_time_to_s(item.start_time)
+          page.should have_selector "li#game_#{item.id}", text: item.start_time.to_s(:weekday_and_ordinal)
         end
       end
 

@@ -147,7 +147,7 @@ input, textarea, select, .uneditable-input {
   border: 1px solid #bbb;
   width: 100%;
   padding: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   @include box_sizing;
 }
 
@@ -178,8 +178,9 @@ input {
   }
 }
 
-.new_availability .btn {
-  margin-top: 10px;
+.btn {
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 /* players index */

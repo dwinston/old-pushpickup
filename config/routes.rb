@@ -1,7 +1,7 @@
 PushPickup::Application.routes.draw do
   resources :players
   resources :sessions, only: [:new, :create, :destroy]
-  resources :availabilities, only: [:create, :destroy]
+  resources :availabilities, only: [:index, :create, :destroy]
   resources :fields
   resources :cities, only: [:index, :new, :create, :destroy]
   resources :password_resets, only: [:new, :create, :edit, :update]

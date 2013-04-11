@@ -59,7 +59,7 @@ class Player < ActiveRecord::Base
   end
 
   def availability_feed
-    availabilities.future
+    availabilities.future.reject(&:unavailability?)
   end
   
   def game_feed

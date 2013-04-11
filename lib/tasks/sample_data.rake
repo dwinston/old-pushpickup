@@ -52,20 +52,24 @@ namespace :db do
 
     # make availabilities
     10.times do
-      start_time = rand(13.days).since(2.hours.from_now).beginning_of_hour
+      start_time = rand(6.days).since(2.hours.from_now).beginning_of_hour
       duration = [45, 60, 75, 90, 105, 120].sample
       some_players.each do |player| 
-        availability = player.availabilities.build(start_time: start_time, duration: duration)
+        availability = player.availabilities.build
+        availability.start_time =  start_time
+        availability.duration =  duration
         availability.fields << Field.all.sample
         availability.save!
       end
       
       # ensure some games
-      start_time = rand(13.days).since(2.hours.from_now).beginning_of_hour
+      start_time = rand(6.days).since(2.hours.from_now).beginning_of_hour
       duration = [45, 60, 75, 90, 105, 120].sample
       field = Field.all.sample
       some_players.each do |player|
-        availability = player.availabilities.build(start_time: start_time, duration: duration)
+        availability = player.availabilities.build
+        availability.start_time =  start_time
+        availability.duration =  duration
         availability.fields << field
         availability.save!
       end

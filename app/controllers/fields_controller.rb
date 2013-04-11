@@ -4,19 +4,18 @@ class FieldsController < ApplicationController
 
   def show
     @field = Field.find_by_id(params[:id])
-    @availability = (signed_in? && current_player.availabilities.build) || Availability.new 
+    @availability = (signed_in? && current_player.availabilities.build(session[:availability_params])) || Availability.new
     @game_feed_items = @field.games.future
     redirect_to fields_path, alert: "Field not found." unless @field
   end
 
   def index
-    params[:city_id] ||= City.pluck(:id)
-    @fields = params[:city_id].flat_map { |id| City.find_by_id(id).fields }
-    @cities = params[:city_id]
+    params[:city_ids] ||= City.pluck(:id)
+    @fields = params[:city_ids].flat_map { |id| City.find_by_id(id).fields }
+    @cities = params[:city_ids]
     @field_markers = @fields.to_gmaps4rails do |field, marker|
       marker.infowindow render_to_string(partial: '/shared/field_info', locals: {field: field}) 
     end
-    store_location
   end
 
   def new
@@ -32,7 +31,7 @@ class FieldsController < ApplicationController
 
     if @field.save
       flash[:success] = 'Field created!'
-      redirect_back_or root_url
+      redirect_to @field
     else
       render 'new'
     end
@@ -46,7 +45,7 @@ class FieldsController < ApplicationController
     @field = Field.find_by_id(params[:id])
     if @field.update_attributes(params[:field])
       flash[:success] = 'Field updated'
-      redirect_back_or root_url
+      redirect_to @field
     else
       render 'edit'
     end
