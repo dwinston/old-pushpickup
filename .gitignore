@@ -22,3 +22,5 @@ doc/
 .DS_Store
 .idea
 /config/database.yml
+/config/*.key
+/config/*.crt
