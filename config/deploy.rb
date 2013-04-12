@@ -48,6 +48,7 @@ namespace :deploy do
     end
   end
   before "deploy", "deploy:check_revision"
+end
 
 
 #set :application, "set your application name here"
