@@ -1,5 +1,5 @@
 class PlayerMailer < ActionMailer::Base
-  default from: "dwinst@gmail.com"
+  default from: "support@pushpickup.com"
   
   def subject_preface 
     "[Push Pickup] "

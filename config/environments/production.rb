@@ -51,6 +51,21 @@ PushPickup::Application.configure do
   # Disable delivery errors, bad email addresses will be ignored
   # config.action_mailer.raise_delivery_errors = false
 
+  # Change delivery method to either :smtp, :sendmail, :file, :test
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: "smtp.gmail.com",
+    port: 587,
+    domain: "pushpickup.com",
+    authentication: "plain",
+    enable_starttls_auto: true,
+    user_name: ENV["GMAIL_USERNAME"],
+    password: ENV["GMAIL_PASSWORD"]
+  }
+
+  # specify what domain to use for mailer URLs
+  config.action_mailer.default_url_options = {host: "pushpickup.com"} 
+
   # Enable threaded mode
   # config.threadsafe!
 
