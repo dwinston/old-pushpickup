@@ -59,8 +59,8 @@ PushPickup::Application.configure do
     domain: "pushpickup.com",
     authentication: "plain",
     enable_starttls_auto: true,
-    user_name: ENV["GMAIL_USERNAME"],
-    password: ENV["GMAIL_PASSWORD"]
+    user_name: 'support@pushpickup.com',
+    password: 'lyzttsoozzbdqdmg'
   }
 
   # specify what domain to use for mailer URLs
