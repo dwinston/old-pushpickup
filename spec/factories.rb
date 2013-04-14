@@ -43,7 +43,7 @@ FactoryGirl.define do
       street_address Faker::Address.street_address 
       zip_code Faker::Address.zip_code 
       notes Faker::Lorem.paragraphs.join("\n")
-      city fake_city
+      city { create :fake_city }
     end
   end
 

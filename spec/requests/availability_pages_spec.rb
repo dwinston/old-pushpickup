@@ -51,16 +51,16 @@ describe "AvailabilityPages" do
         it { should have_content "Have you confirmed" }
       end
 
-      describe 'and with expired trial period' do
-        before do
-          player.update_attribute(:created_at, 31.days.ago)
-          sign_in player
-          submit_availability [field] 
-        end
+      #describe 'and with expired trial period' do
+      #  before do
+      #    player.update_attribute(:created_at, 31.days.ago)
+      #    sign_in player
+      #    submit_availability [field] 
+      #  end
 
-        it { should have_content "currently unable" }
-        it { should have_content "consider subscribing" }
-      end
+      #  it { should have_content "currently unable" }
+      #  it { should have_content "consider subscribing" }
+      #end
     end
 
     describe 'with enough other players available for a game' do
@@ -104,10 +104,10 @@ describe "AvailabilityPages" do
         it { should have_content 'Unavailability created' }
       end
 
-      describe 'with enough other players available for a game during the unavailability' do
+      describe 'with enough other players available for a game that the unavailability encompasses' do
         before do
           submit_unavailability [field], 'Because I said so', day: soon.to_s(:weekday), time: soon.to_s(:ampm_time) 
-          14.times { FactoryGirl.create(:availability, start_time: soon, fields: [field]) }
+          14.times { FactoryGirl.create(:availability, start_time: soon, duration: 45, fields: [field]) }
           visit field_path(field)
         end
 

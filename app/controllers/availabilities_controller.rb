@@ -30,11 +30,7 @@ class AvailabilitiesController < ApplicationController
       flash[:success] = make_unavailability ? "Unavailability created!" : 'Availability created!'
       if !current_player.activated? 
         flash[:alert] = "You are currently unable to help create games through your availabilities."
-        if current_player.created_at > 30.days.ago
-          flash[:alert] += " Have you confirmed your email address using the link sent to #{current_player.email}?"
-        elsif !current_player.subscribed?
-          flash[:alert] += " Please consider subscribing for full privileges."
-        end
+        flash[:alert] += " Have you confirmed your email address using the link sent to #{current_player.email}?"
       end
       redirect_to root_url
     else

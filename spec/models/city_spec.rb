@@ -26,17 +26,17 @@ describe City do
     it { should_not be_valid }
   end
   
-  describe 'when destroyed' do
+  describe 'with a couple fields' do
     before do
-      FactoryGirl.create(:field, city: city)
-      FactoryGirl.create(:field, city: city)
+      city.fields.create(Field.examples_for_testing.sample.reject!{|k,v| k == :city_name})
+      city.fields.create(Field.examples_for_testing.sample.reject!{|k,v| k == :city_name})
     end
 
     it 'has a couple fields now' do
       city.fields.count.should == 2
     end
 
-    it "should destroy associated fields" do
+    it "should destroy associated fields when city is destroyed" do
       fields = city.fields.dup
       city.destroy
       fields.should_not be_empty
