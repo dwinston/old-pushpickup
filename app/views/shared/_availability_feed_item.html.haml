@@ -2,7 +2,7 @@
   .feed_item_icon.progress
     .bar{class: "#{bar_type}", style: "width: #{[feed_item.duration, 100].min}%;"}
   %span.fields
-    = feed_item.fields.map(&:name).to_sentence(two_words_connector: ' or ', last_word_connector: ', or ')
+    = feed_item.fields.map{|f| link_to(f.name, f)}.to_sentence(two_words_connector: ' or ', last_word_connector: ', or ').html_safe
   %span.start_time= feed_item.start_time.to_s(:weekday_and_ordinal)
   %span.duration for #{distance_of_time_in_words(feed_item.start_time, feed_item.start_time + feed_item.duration.minutes)}
   - if !open

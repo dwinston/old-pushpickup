@@ -1,6 +1,6 @@
 %p 
   Thanks to you, a game is now on at
-  = @field.name
+  = link_to @field.name, @field
   on
   = @start_time.to_s(:weekday_and_ordinal)
   for at least

@@ -39,7 +39,7 @@ describe PlayerMailer do
                                start_time.to_s(:weekday_and_ordinal),
                                distance_of_time_in_words(start_time, start_time + duration.minutes))
       mail.from.should eq(["support@pushpickup.com"])
-      #mail.body.encoded.should match(field_path(field))
+      mail.body.encoded.should match(field_path(field))
     end
   end
 end

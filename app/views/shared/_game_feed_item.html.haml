@@ -3,7 +3,8 @@
     .bar.bar-success{style: "width: 100%;"}
   %span.fields
     %strong GAME ON 
-    at #{feed_item.field.name}
+    at
+    = link_to feed_item.field.name, feed_item.field
   %span.start_time= feed_item.start_time.to_s(:weekday_and_ordinal)
   %span.duration
     for

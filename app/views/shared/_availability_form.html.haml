@@ -21,12 +21,12 @@
       .checkbox
         = check_box_tag "availability[field_ids][]", field.id, 
           @availability.field_ids.include?(field.id), id: dom_id(field)
-        = label_tag dom_id(field), field.name
+        = label_tag dom_id(field), link_to(field.name, field)
   - elsif @field 
     .checkbox
       = check_box_tag "availability[field_ids][]", @field.id, 
         @availability.field_ids.include?(@field.id), id: dom_id(@field)
-      = label_tag dom_id(@field), @field.name
+      = label_tag dom_id(@field), link_to(@field.name, @field)
 
   .field= f.submit 'Add fields', name: 'add_fields', class: 'btn btn-info'
   .field= f.submit 'Post', 
