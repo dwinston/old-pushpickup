@@ -15,11 +15,13 @@
     .hero-unit
       %h1 Push Pickup
       %h2 Set your needs. Post your availabilities. Get your game on.
-      = link_to 'Sign up now!', signup_path, class: 'btn btn-large btn-primary'
-  .row
-    .span8.offset2
+      = link_to 'Sign up now!', signup_path, class: 'btn btn-large btn-primary', id: 'signup'
       .lead 
         Push Pickup helps you push for a game of pickup <a href='http://en.wikipedia.org/wiki/Ultimate_(sport)'>ultimate frisbee</a>
-        at a time you want, at a field near you. Set your needs (minimum number of players in game, etc.) and post 
+        at a time you want, at a field near you.
+        Set your needs (minimum number of players in game, etc.) and post 
         when you're available. You get an email when your game is on.
+      .div= gmaps4rails(@field_markers) if !Rails.env.test?
+      .lead Currently, Push Pickup is for the San Francisco Bay Area.
+
   -#= link_to image_tag('rails.png', alt: 'Rails'), 'http://rubyonrails.org/'

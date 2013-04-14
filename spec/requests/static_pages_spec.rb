@@ -19,37 +19,49 @@ describe "StaticPages" do
       let(:player) { FactoryGirl.create(:player) }
       let(:field) { FactoryGirl.create(:field) }
       let(:soonest) { DateTime.now.advance(hours: 1).beginning_of_hour }
-      before do
-        FactoryGirl.create(:availability, player: player, 
-                           start_time: soonest, fields: [field])
-        FactoryGirl.create(:availability, player: player, 
-                           start_time: soonest.advance(days: 1))
-        sign_in player
-        visit root_path
-      end
 
-      it "should render the player's availability feed" do
-        player.availability_feed.each do |item|
-          page.should have_selector "li#availability_#{item.id}", text: item.start_time.to_s(:weekday_and_ordinal)
-        end
-      end
-
-      it "should render the player's games feed" do
-        player.game_feed.each do |item|
-          page.should have_selector "li#game_#{item.id}", text: item.start_time.to_s(:weekday_and_ordinal)
-        end
-      end
-
-      describe "with an upcoming game" do
+      describe 'without availabilities posted' do
         before do
-          13.times { FactoryGirl.create(:availability, start_time: soonest, fields: [field]) }
+          sign_in player
           visit root_path
         end
 
-        it "game should be created" do
-          field.games.count.should == 1
+        it { should have_selector 'title', text: full_title('') }
+      end
+
+      describe 'with availabilities posted' do
+        before do
+          FactoryGirl.create(:availability, player: player, 
+                             start_time: soonest, fields: [field])
+          FactoryGirl.create(:availability, player: player, 
+                             start_time: soonest.advance(days: 1))
+          sign_in player
+          visit root_path
         end
-        it { should have_content "GAME ON at #{field.name}" }
+
+        it "should render the player's availability feed" do
+          player.availability_feed.each do |item|
+            page.should have_selector "li#availability_#{item.id}", text: item.start_time.to_s(:weekday_and_ordinal)
+          end
+        end
+
+        it "should render the player's games feed" do
+          player.game_feed.each do |item|
+            page.should have_selector "li#game_#{item.id}", text: item.start_time.to_s(:weekday_and_ordinal)
+          end
+        end
+
+        describe "with an upcoming game" do
+          before do
+            13.times { FactoryGirl.create(:availability, start_time: soonest, fields: [field]) }
+            visit root_path
+          end
+
+          it "game should be created" do
+            field.games.count.should == 1
+          end
+          it { should have_content "GAME ON at #{field.name}" }
+        end
       end
     end
   end 
