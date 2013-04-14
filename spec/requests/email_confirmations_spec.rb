@@ -2,17 +2,24 @@ require 'spec_helper'
 
 describe "EmailConfirmations" do
 
-  it 'emails player when changing email address' do
+  it 'after signup, player is inactive and sent an email confirmation' do
+    player = FactoryGirl.build(:player)
+    sign_up player
+    player = Player.find_by_email(player.email)
+    player.should_not be_activated
+    last_email.to.should include(player.email)
+  end
+
+  it 'inactivates and emails player when changing email address' do
     player = FactoryGirl.create(:player)
     sign_in player
     click_link "your settings"
     fill_in "Email", with: "player@example.com"
-    fill_in "Password", with: player.password
-    fill_in "Confirm password", with: player.password
     click_button "Save changes"
     current_path.should eq(root_path)
     page.should have_content("Email sent")
-    last_email.to.should include(player.reload.email)
+    player.reload.should_not be_activated
+    last_email.to.should include(player.email)
   end
 
   it "activates player when confirmation matches" do

@@ -33,6 +33,7 @@ class PlayersController < ApplicationController
     if @player.update_attributes(params[:player])
       flash[:success] = 'Profile updated'
       if @player.reload.email != old_email
+        @player.update_attribute(:activated, false)
         @player.send_email_confirmation
         flash[:notice] = "Email sent to #{@player.email} to confirm ownership of that email address."
       end

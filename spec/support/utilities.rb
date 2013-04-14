@@ -3,12 +3,13 @@ include FieldsHelper
 
 def sign_up(player)
   visit signup_path
+  fill_in 'Name',             with: player.name
   fill_in 'Email',            with: player.email
   fill_in 'Password',         with: player.password
   fill_in 'Confirm password', with: player.password
-  click_button submit
+  click_button 'Create'
   # Sign in when not using Capybara as well.
-  cookies[:remember_token] = player.reload.remember_token
+  # cookies[:remember_token] = player.reload.remember_token
 end
 
 def sign_in(player)

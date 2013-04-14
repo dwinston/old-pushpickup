@@ -94,7 +94,10 @@ describe "Player pages" do
     end
 
     describe 'with invalid information' do
-      before { click_button 'Save changes' }
+      before do
+        fill_in 'Email', with: 'doobeedoo'
+        click_button 'Save changes'
+      end
       it { should have_content 'error' }
     end
 
@@ -104,8 +107,6 @@ describe "Player pages" do
       before do
         fill_in 'Name',             with: new_name
         fill_in 'Email',            with: new_email
-        fill_in 'Password',         with: player.password
-        fill_in 'Confirm password', with: player.password
         click_button 'Save changes'
       end
       
