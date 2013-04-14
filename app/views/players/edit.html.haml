@@ -18,7 +18,7 @@
         = f.fields_for :needs, need do |need_fields|
           .field
             = need_fields.label :value, need.pretty_name
-            .input-mini= need_fields.number_field :value
+            .input-medium= need_fields.select :value, need.options_for_select
 
     -#= gravatar_for @player
     -#= link_to 'change', 'http://gravatar.com/emails', target: "_blank"

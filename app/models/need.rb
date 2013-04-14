@@ -49,4 +49,17 @@ class Need < ActiveRecord::Base
     end
     result.gsub('_',' ')
   end
+
+  def options_for_select
+    case name
+    when /^min_players_in_game/
+      (6..14).reject{|n| n % 2 == 1}
+    when /^min_duration_of_game/
+      ['30 minutes', '45 minutes', '1 hour'].zip([30,45,60])
+    when /^min_days_separating_games/
+      ['0 (same day OK)'].concat((1..7).to_a).zip(0..7)
+    else
+      ['yes','no'].zip([0,1])
+    end
+  end
 end

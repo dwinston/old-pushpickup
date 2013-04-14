@@ -30,8 +30,6 @@ class PlayersController < ApplicationController
 
   def update
     old_email = @player.email
-    params[:player].delete :password
-    params[:player].delete :password_confirmation
     if @player.update_attributes(params[:player])
       flash[:success] = 'Profile updated'
       if @player.reload.email != old_email
