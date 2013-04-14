@@ -3,7 +3,7 @@
   %aside.span4
     %section
       %h1
-        = gravatar_for @player
+        -#= gravatar_for @player
         = @player.name
   .span8
     - if @player.availabilities.any?

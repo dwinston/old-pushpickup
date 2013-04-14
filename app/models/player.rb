@@ -20,6 +20,7 @@
 
 class Player < ActiveRecord::Base
   attr_accessible :email, :name, :password, :password_confirmation, :needs_attributes
+  attr_accessor :signed_in
   has_secure_password
   has_many :availabilities, dependent: :destroy
   has_many :fields, through: :availabilities
@@ -41,8 +42,8 @@ class Player < ActiveRecord::Base
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, format: { with: VALID_EMAIL_REGEX },
                     uniqueness: { case_sensitive: false }
-  validates :password, length: { minimum: 6 }
-  validates :password_confirmation, presence: true
+  validates :password, length: { minimum: 6 }, unless: :signed_in
+  validates :password_confirmation, presence: true, unless: Proc.new { |p| p.password.blank? }
 
   def send_password_reset
     generate_token(:password_reset_token)

@@ -30,6 +30,8 @@ class PlayersController < ApplicationController
 
   def update
     old_email = @player.email
+    params[:player].delete :password
+    params[:player].delete :password_confirmation
     if @player.update_attributes(params[:player])
       flash[:success] = 'Profile updated'
       if @player.reload.email != old_email
@@ -68,7 +70,11 @@ class PlayersController < ApplicationController
     
     def correct_player
       @player = Player.find(params[:id])
-      redirect_to(root_path) unless current_player?(@player)
+      if current_player?(@player)
+        @player.signed_in = true
+      else
+        redirect_to(root_path) 
+      end
     end
 
     def admin_player

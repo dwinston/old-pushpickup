@@ -1,6 +1,6 @@
 %li{class: 'availability_feed_item', id: 'availability_' + feed_item.id.to_s }
   .feed_item_icon.progress
-    .bar{class: "#{bar_type}", style: "width: #{[feed_item.duration, 100].min}%;"}
+    .bar{class: "#{bar_type}", style: "width: 100%;"}
   %span.fields
     = feed_item.fields.map{|f| link_to(f.name, f)}.to_sentence(two_words_connector: ' or ', last_word_connector: ', or ').html_safe
   %span.start_time= feed_item.start_time.to_s(:weekday_and_ordinal)

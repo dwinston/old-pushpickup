@@ -4,7 +4,14 @@
 .row
   .span6.offset3
     = form_for(@player) do |f|
-      = render 'fields', f: f
+      = render 'shared/error_messages', object: f.object
+
+      = f.label :name
+      = f.text_field :name
+
+      = f.label :email
+      = f.text_field :email
+
       = f.submit 'Save changes', class: 'btn btn-large btn-primary'
 
       - @player.needs.each do |need|
@@ -13,6 +20,6 @@
             = need_fields.label :value, need.pretty_name
             .input-mini= need_fields.number_field :value
 
-    = gravatar_for @player
-    = link_to 'change', 'http://gravatar.com/emails', target: "_blank"
+    -#= gravatar_for @player
+    -#= link_to 'change', 'http://gravatar.com/emails', target: "_blank"
 
