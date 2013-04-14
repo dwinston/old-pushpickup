@@ -13,6 +13,10 @@
         = submit_tag 'Refine', class: 'btn btn-primary'
     - if signed_in? && current_player.admin?
       = link_to 'Add field', new_field_path
+    - else
+      Want to add a field? 
+      = succeed '.' do
+        %a{href: 'mailto:donny@pushpickup.com'} Let me know
   .span8
     %p 
       Choose a field near you:

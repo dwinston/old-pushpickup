@@ -8,5 +8,9 @@
     = render 'shared/game_feed'
   .span4
     %h3 Unavailabilities
+    - unless signed_in? && current_player.admin?
+      Do you know of times when this field is unavailable? 
+      = succeed '.' do
+        %a{href: 'mailto:donny@pushpickup.com'} Let me know
     = render partial: 'shared/availability_feed', 
       locals: {feed_items: @field.availabilities.future.select(&:unavailability?), bar_type: 'bar-danger', open: false}
