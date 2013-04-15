@@ -1,6 +1,6 @@
 namespace :db do
   desc 'Fill database with sample data'
-  task populate: :environment do
+  task sample_populate: :environment do
     # make an admin player
     admin = Player.create!(name: 'Donny Winston',
                            email: 'dwinston@alum.mit.edu',
