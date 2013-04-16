@@ -2,11 +2,15 @@
 .row
   %aside.span4
     %section
-      %h1
-        -#= gravatar_for @player
-        = @player.name
-  .span8
-    - if @player.availabilities.any?
-      %h3 Availabilities (#{@player.availabilities.count})
-      %ol.availabilities
-        = render @availabilities
+      showing
+      %h1= @player.name
+      - if current_player.admin?
+        %span= link_to 'his/her settings (read-only)', edit_player_path(@player)
+    %section= render 'shared/availability_form'
+  .span4
+    %h3 Games
+    = render 'shared/game_feed'
+  .span4
+    %h3 Availabilities
+    = render partial: 'shared/availability_feed',
+      locals: {feed_items: @availability_feed_items, bar_type: 'bar-warning', open: true}

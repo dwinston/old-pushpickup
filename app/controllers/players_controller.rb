@@ -1,11 +1,19 @@
 class PlayersController < ApplicationController
   before_filter :not_signed_in, only: [:create, :new]
-  before_filter :signed_in_player, only: [:index, :edit, :update, :destroy]
-  before_filter :correct_player,   only: [:edit, :update]
-  before_filter :admin_player,     only: [:index, :destroy]
+  before_filter :signed_in_player, only: [:show, :index, :edit, :update, :destroy]
+  before_filter :correct_player_or_admin,   only: :edit
+  before_filter :correct_player,   only: :update
+  before_filter :admin_player,     only: [:show, :index, :destroy]
 
   def show
-    redirect_to root_url
+    @player = Player.find(params[:id])
+    if @player
+      @availability = current_player.availabilities.build 
+      @availability_feed_items = @player.availability_feed
+      @game_feed_items = @player.game_feed
+    else
+      redirect_to root_path
+    end
   end
 
   def new
@@ -70,6 +78,15 @@ class PlayersController < ApplicationController
     def correct_player
       @player = Player.find(params[:id])
       if current_player?(@player)
+        @player.signed_in = true
+      else
+        redirect_to(root_path) 
+      end
+    end
+    
+    def correct_player_or_admin
+      @player = Player.find(params[:id])
+      if current_player?(@player) || (@player && current_player.admin?)
         @player.signed_in = true
       else
         redirect_to(root_path) 
