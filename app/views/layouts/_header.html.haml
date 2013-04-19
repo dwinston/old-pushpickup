@@ -1,23 +1,21 @@
 %header.navbar.navbar-fixed-top.navbar-inverse
   .navbar-inner
     .container
-      = link_to "push pickup", root_path, id: "logo"
-      %nav
-        %ul.nav.pull-right
+      %a{class: 'btn btn-navbar', data: {toggle: 'collapse', target: '.nav-collapse'}}
+        %span{class: 'icon-bar'}
+        %span{class: 'icon-bar'}
+        %span{class: 'icon-bar'}
+      = link_to "push pickup", root_path, id: "logo", class: 'brand'
+      .nav-collapse.collapse
+        %ul.nav
           %li= link_to "Home", root_path
           %li= link_to "Fields", fields_path
           %li= link_to "Help", help_path
           - if signed_in?
             - if current_player.admin?
               %li= link_to 'Players', players_path
-            %li#fat-menu.dropdown
-              %a.dropdown-toggle{:href => '#', :data => {:toggle => 'dropdown'}}
-                Account
-                %b.caret
-              %ul.dropdown-menu
-                %li= link_to 'Settings', edit_player_path(current_player)
-                %li.divider
-                %li= link_to 'Sign out', signout_path, method: 'delete'
+            %li= link_to 'Settings', edit_player_path(current_player)
+            %li= link_to 'Sign out', signout_path, method: 'delete'
           - else
             %li= link_to "Sign in", signin_path
 
